@@ -164,7 +164,7 @@ class MySpaces extends StatelessWidget {
                   ),
                   const SizedBox(width: 2),
                   Text(
-                    '$cost',
+                    cost,
                     style: const TextStyle(
                       fontFamily: 'AnekLatin',
                       fontSize: 14,

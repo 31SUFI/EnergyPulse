@@ -1,9 +1,9 @@
+import 'package:energy_meter_app/global%20widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import '../widgets/custom_app_bar.dart';
 import '../widgets/weather_greeting.dart';
 import '../widgets/today_usage_card.dart';
 import '../widgets/my_spaces.dart';
-import '../core/constants/app_colors.dart';
+import '../../../core/constants/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
