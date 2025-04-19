@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/constants/app_colors.dart';
+import '../model/space_model.dart';
+import 'add_space_dialog.dart';
 
-class MySpaces extends StatelessWidget {
+class MySpaces extends StatefulWidget {
   const MySpaces({super.key});
+
+  @override
+  State<MySpaces> createState() => _MySpacesState();
+}
+
+class _MySpacesState extends State<MySpaces> {
+  final List<Space> _spaces = [
+    Space(
+      name: 'Master Bedroom',
+      category: SpaceCategory.bedroom,
+      energyConsumption: 2.5,
+    ),
+    Space(
+      name: 'Kitchen',
+      category: SpaceCategory.kitchen,
+      energyConsumption: 4.2,
+    ),
+  ];
+
+  void _addNewSpace(Space space) {
+    setState(() {
+      _spaces.add(space);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +50,14 @@ class MySpaces extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  // TODO: Implement add new space
+                onPressed: () async {
+                  final newSpace = await showDialog<Space>(
+                    context: context,
+                    builder: (context) => const AddSpaceDialog(),
+                  );
+                  if (newSpace != null) {
+                    _addNewSpace(newSpace);
+                  }
                 },
                 child: Row(
                   children: [
@@ -46,31 +78,44 @@ class MySpaces extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 2.0,
-            children: [
-              _buildSpaceCard(
-                image: 'assets/images/bedroom.svg',
-                name: 'Bedroom',
-                usage: '2',
-                cost: '0.50',
+          if (_spaces.isEmpty)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.home_outlined,
+                    size: 48,
+                    color: AppColors.textSecondary.withOpacity(0.5),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No spaces added yet',
+                    style: TextStyle(
+                      fontFamily: 'AnekLatin',
+                      fontSize: 16,
+                      color: AppColors.textSecondary.withOpacity(0.5),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 2.0,
+              children: _spaces.map((space) => _buildSpaceCard(
+                image: space.category.iconPath,
+                name: space.name,
+                usage: space.energyConsumption.toStringAsFixed(1),
+                cost: (space.energyConsumption * 0.25).toStringAsFixed(2),
                 showTrend: false,
-              ),
-              _buildSpaceCard(
-                image: 'assets/images/kitchen.svg',
-                name: 'Kitchen',
-                usage: '4',
-                cost: '2.50',
-                showTrend: true,
-                isIncreasing: true,
-              ),
-            ],
-          ),
+              )).toList(),
+            ),
         ],
       ),
     );
@@ -82,7 +127,6 @@ class MySpaces extends StatelessWidget {
     required String usage,
     required String cost,
     bool showTrend = false,
-    bool isIncreasing = false,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
