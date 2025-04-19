@@ -4,65 +4,88 @@ import '../core/constants/app_colors.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
+  static const _titleStyle = TextStyle(
+    fontFamily: 'AnekLatin',
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+  );
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.background,
       elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.menu, color: AppColors.textPrimary),
-        onPressed: () {
-          // TODO: Implement drawer
-        },
-      ),
+      leading: const _MenuButton(),
       title: Row(
         children: [
           Text(
             'Energy',
-            style: TextStyle(
-              fontFamily: 'AnekLatin',
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: _titleStyle.copyWith(color: AppColors.textPrimary),
           ),
           Text(
             'Pulse',
-            style: TextStyle(
-              fontFamily: 'AnekLatin',
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
-            ),
+            style: _titleStyle.copyWith(color: AppColors.primary),
           ),
         ],
       ),
       centerTitle: false,
-      actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.notifications_none_outlined,
-            color: AppColors.textPrimary,
-          ),
-          onPressed: () {
-            // TODO: Implement notifications
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: AppColors.cardBackground,
-            child: const Icon(
-              Icons.person_outline,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ),
+      actions: const [
+        _NotificationButton(),
+        _ProfileAvatar(),
       ],
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _MenuButton extends StatelessWidget {
+  const _MenuButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+      onPressed: () {
+        // TODO: Implement drawer
+      },
+    );
+  }
+}
+
+class _NotificationButton extends StatelessWidget {
+  const _NotificationButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(
+        Icons.notifications_none_outlined,
+        color: AppColors.textPrimary,
+      ),
+      onPressed: () {
+        // TODO: Implement notifications
+      },
+    );
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(right: 16.0),
+      child: CircleAvatar(
+        radius: 16,
+        backgroundColor: AppColors.cardBackground,
+        child: Icon(
+          Icons.person_outline,
+          color: AppColors.textPrimary,
+        ),
+      ),
+    );
+  }
 }
