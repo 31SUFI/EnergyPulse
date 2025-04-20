@@ -1,10 +1,9 @@
-import 'package:energy_meter_app/global%20widgets/custom_app_bar.dart';
+import 'package:energy_meter_app/features/home/widgets/custom_app_bar.dart';
 import 'package:energy_meter_app/global%20widgets/custom_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/weather_greeting.dart';
 import '../widgets/today_usage_card.dart';
 import '../widgets/my_spaces.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/app_state.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       appBar: const CustomAppBar(),
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _selectedIndex,
@@ -32,17 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       body: Consumer<AppState>(
-        builder: (context, appState, _) => SingleChildScrollView(
-          child: Column(
-            children: const [
-              WeatherGreeting(),
-              SizedBox(height: 16),
-              TodayUsageCard(),
-              SizedBox(height: 16),
-              MySpaces(),
-            ],
-          ),
-        ),
+        builder:
+            (context, appState, _) => SingleChildScrollView(
+              child: Column(
+                children: const [
+                  WeatherGreeting(),
+                  SizedBox(height: 16),
+                  TodayUsageCard(),
+                  SizedBox(height: 16),
+                  MySpaces(),
+                ],
+              ),
+            ),
       ),
     );
   }

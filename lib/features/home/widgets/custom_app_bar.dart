@@ -1,5 +1,5 @@
+import 'package:energy_meter_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -22,17 +22,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             'Energy',
             style: _titleStyle.copyWith(color: AppColors.textPrimary),
           ),
-          Text(
-            'Pulse',
-            style: _titleStyle.copyWith(color: AppColors.primary),
-          ),
+          Text('Pulse', style: _titleStyle.copyWith(color: AppColors.primary)),
         ],
       ),
       centerTitle: false,
-      actions: const [
-        _NotificationButton(),
-        _ProfileAvatar(),
-      ],
+      actions: const [_NotificationButton(), _ProfileAvatar()],
     );
   }
 
@@ -81,10 +75,7 @@ class _ProfileAvatar extends StatelessWidget {
       child: CircleAvatar(
         radius: 16,
         backgroundColor: AppColors.cardBackground,
-        child: Icon(
-          Icons.person_outline,
-          color: AppColors.textPrimary,
-        ),
+        child: Icon(Icons.person_outline, color: AppColors.textPrimary),
       ),
     );
   }

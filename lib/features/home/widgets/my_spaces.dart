@@ -108,13 +108,19 @@ class _MySpacesState extends State<MySpaces> {
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 2.0,
-              children: _spaces.map((space) => _buildSpaceCard(
-                image: space.category.iconPath,
-                name: space.name,
-                usage: space.energyConsumption.toStringAsFixed(1),
-                cost: (space.energyConsumption * 0.25).toStringAsFixed(2),
-                showTrend: false,
-              )).toList(),
+              children:
+                  _spaces
+                      .map(
+                        (space) => _buildSpaceCard(
+                          image: space.category.iconPath,
+                          name: space.name,
+                          usage: space.energyConsumption.toStringAsFixed(1),
+                          cost: (space.energyConsumption * 0.25)
+                              .toStringAsFixed(2),
+                          showTrend: false,
+                        ),
+                      )
+                      .toList(),
             ),
         ],
       ),
