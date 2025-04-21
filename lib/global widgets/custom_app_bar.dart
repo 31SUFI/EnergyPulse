@@ -2,7 +2,8 @@ import 'package:energy_meter_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final String title;
+  const CustomAppBar({super.key, required this.title});
 
   static const _titleStyle = TextStyle(
     fontFamily: 'AnekLatin',
@@ -16,16 +17,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.background,
       elevation: 0,
       leading: const _MenuButton(),
-      title: Row(
-        children: [
-          Text(
-            'Energy',
-            style: _titleStyle.copyWith(color: AppColors.textPrimary),
-          ),
-          Text('Pulse', style: _titleStyle.copyWith(color: AppColors.primary)),
-        ],
+      title: Text(
+        title,
+        style: _titleStyle.copyWith(color: AppColors.textPrimary),
       ),
       centerTitle: false,
+
       actions: const [_NotificationButton(), _ProfileAvatar()],
     );
   }
