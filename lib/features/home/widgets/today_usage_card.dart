@@ -200,7 +200,7 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                       fontFamily: 'AnekLatin',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                      color: AppColors.secondary,
                     ),
                   ),
                   Icon(

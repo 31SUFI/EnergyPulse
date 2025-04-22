@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/room_selection_provider.dart';
 import '../widgets/room_chip.dart';
+import '../widgets/room_usage_stats.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -29,7 +30,7 @@ class StatsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              // Room usage chart will be added here
+              const RoomUsageStats()
             ],
           ),
         ),
