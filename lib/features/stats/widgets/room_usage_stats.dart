@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../../core/constants/app_colors.dart';
-import '../models/device_usage_model.dart';
 import 'package:provider/provider.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../features/home/providers/space_provider.dart';
+import '../models/device_usage_model.dart';
 import '../providers/room_selection_provider.dart';
 
 class RoomUsageStats extends StatelessWidget {
@@ -10,9 +11,13 @@ class RoomUsageStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RoomSelectionProvider>(
-      builder: (context, provider, _) {
-        final stats = RoomStats.getStatsForRoom(provider.selectedRoom);
+    return Consumer2<RoomSelectionProvider, SpaceProvider>(
+      builder: (context, roomProvider, spaceProvider, _) {
+        final selectedSpace = spaceProvider.spaces.firstWhere(
+          (space) => space.name == roomProvider.selectedRoom,
+          orElse: () => spaceProvider.spaces.first,
+        );
+        final stats = RoomStats.getStatsForSpace(selectedSpace);
 
         return Container(
           padding: const EdgeInsets.all(16),
@@ -39,7 +44,7 @@ class RoomUsageStats extends StatelessWidget {
                     child: Row(
                       children: [
                         SvgPicture.asset(
-                          'assets/images/bedroom.svg',
+                          selectedSpace.category.iconPath,
                           width: 32,
                           height: 32,
                         ),

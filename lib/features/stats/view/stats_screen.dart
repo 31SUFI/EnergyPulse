@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../features/home/providers/space_provider.dart';
 import '../providers/room_selection_provider.dart';
 import '../widgets/room_chip.dart';
 import '../widgets/room_usage_stats.dart';
@@ -17,17 +18,19 @@ class StatsScreen extends StatelessWidget {
           child: Column(
             children: [
               // Room selection chips
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: const [
-                    RoomChip(roomName: "Oliver's Bedroom"),
-                    SizedBox(width: 8),
-                    RoomChip(roomName: "Living Room"),
-                    SizedBox(width: 8),
-                    RoomChip(roomName: "Kitchen"),
-                  ],
-                ),
+              Consumer<SpaceProvider>(
+                builder: (context, spaceProvider, _) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: spaceProvider.spaces.map((space) => [
+                        RoomChip(roomName: space.name),
+                        const SizedBox(width: 8),
+                      ]).expand((widgets) => widgets).toList()
+                        ..removeLast(), // Remove last SizedBox
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               const RoomUsageStats()

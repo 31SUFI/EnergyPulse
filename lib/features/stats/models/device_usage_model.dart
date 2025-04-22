@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+import '../../../features/home/model/space_model.dart';
+
 class DeviceUsage {
   final String deviceName;
   final double usage; // in kWh
@@ -21,47 +24,43 @@ class RoomStats {
     required this.estimatedCost,
   });
 
-  // Sample data for each room
-  static RoomStats getStatsForRoom(String roomName) {
-    switch (roomName) {
-      case "Oliver's Bedroom":
-        return RoomStats(
-          roomName: roomName,
-          devices: [
-            DeviceUsage(deviceName: "Baby Cam", usage: 4),
-            DeviceUsage(deviceName: "Heater", usage: 6),
-            DeviceUsage(deviceName: "Smart Cradle", usage: 5),
-            DeviceUsage(deviceName: "Speaker", usage: 3),
-          ],
-          totalUsage: 18,
-          estimatedCost: 8.20,
-        );
-      case "Living Room":
-        return RoomStats(
-          roomName: roomName,
-          devices: [
-            DeviceUsage(deviceName: "TV", usage: 8),
-            DeviceUsage(deviceName: "AC", usage: 12),
-            DeviceUsage(deviceName: "Smart Lights", usage: 2),
-            DeviceUsage(deviceName: "Game Console", usage: 5),
-          ],
-          totalUsage: 27,
-          estimatedCost: 12.50,
-        );
-      case "Kitchen":
-        return RoomStats(
-          roomName: roomName,
-          devices: [
-            DeviceUsage(deviceName: "Refrigerator", usage: 15),
-            DeviceUsage(deviceName: "Microwave", usage: 7),
-            DeviceUsage(deviceName: "Coffee Maker", usage: 3),
-            DeviceUsage(deviceName: "Dishwasher", usage: 8),
-          ],
-          totalUsage: 33,
-          estimatedCost: 15.80,
-        );
-      default:
-        throw Exception("Unknown room: $roomName");
-    }
+  static final Map<SpaceCategory, List<String>> _devicesByCategory = {
+    SpaceCategory.bedroom: [
+      'Lights', 'AC', 'TV', 'Phone Charger', 'Laptop Charger'
+    ],
+    SpaceCategory.bathroom: [
+      'Water Heater', 'Hair Dryer', 'Exhaust Fan', 'Lights'
+    ],
+    SpaceCategory.kitchen: [
+      'Refrigerator', 'Microwave', 'Coffee Maker', 'Dishwasher', 'Lights'
+    ],
+    SpaceCategory.familyhall: [
+      'TV', 'AC', 'Game Console', 'Smart Lights', 'Sound System'
+    ],
+  };
+
+  // Generate random but consistent stats for a space
+  static RoomStats getStatsForSpace(Space space) {
+    final random = math.Random(space.name.hashCode); // Use consistent seed for same room
+    final deviceList = _devicesByCategory[space.category] ?? [];
+    final numDevices = math.min(4, deviceList.length);
+    
+    final devices = deviceList
+        .take(numDevices)
+        .map((name) => DeviceUsage(
+              deviceName: name,
+              usage: (random.nextDouble() * 8 + 2).roundToDouble(), // 2-10 kWh
+            ))
+        .toList();
+
+    final totalUsage = devices.fold<double>(
+        0, (sum, device) => sum + device.usage);
+
+    return RoomStats(
+      roomName: space.name,
+      devices: devices,
+      totalUsage: totalUsage,
+      estimatedCost: totalUsage * 0.25, // $0.25 per kWh
+    );
   }
 }

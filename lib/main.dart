@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'features/home/view/home_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'core/providers/app_state.dart';
+import 'features/home/providers/space_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,8 +15,11 @@ void main() {
     ),
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AppState(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppState()),
+        ChangeNotifierProvider(create: (_) => SpaceProvider()),
+      ],
       child: const MyApp(),
     ),
   );

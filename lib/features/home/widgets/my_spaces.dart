@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../model/space_model.dart';
+import '../providers/space_provider.dart';
 import 'add_space_dialog.dart';
 
 class MySpaces extends StatefulWidget {
@@ -12,23 +14,8 @@ class MySpaces extends StatefulWidget {
 }
 
 class _MySpacesState extends State<MySpaces> {
-  final List<Space> _spaces = [
-    Space(
-      name: 'Master Bedroom',
-      category: SpaceCategory.bedroom,
-      energyConsumption: 2.5,
-    ),
-    Space(
-      name: 'Kitchen',
-      category: SpaceCategory.kitchen,
-      energyConsumption: 4.2,
-    ),
-  ];
-
-  void _addNewSpace(Space space) {
-    setState(() {
-      _spaces.add(space);
-    });
+  void _addNewSpace(BuildContext context, Space space) {
+    context.read<SpaceProvider>().addSpace(space);
   }
 
   @override
@@ -56,7 +43,7 @@ class _MySpacesState extends State<MySpaces> {
                     builder: (context) => const AddSpaceDialog(),
                   );
                   if (newSpace != null) {
-                    _addNewSpace(newSpace);
+                    _addNewSpace(context, newSpace);
                   }
                 },
                 child: Row(
@@ -78,7 +65,7 @@ class _MySpacesState extends State<MySpaces> {
             ],
           ),
           const SizedBox(height: 16),
-          if (_spaces.isEmpty)
+          if (context.watch<SpaceProvider>().spaces.isEmpty)
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -101,26 +88,26 @@ class _MySpacesState extends State<MySpaces> {
               ),
             )
           else
-            GridView.count(
+            GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 2.0,
-              children:
-                  _spaces
-                      .map(
-                        (space) => _buildSpaceCard(
-                          image: space.category.iconPath,
-                          name: space.name,
-                          usage: space.energyConsumption.toStringAsFixed(1),
-                          cost: (space.energyConsumption * 0.25)
-                              .toStringAsFixed(2),
-                          showTrend: false,
-                        ),
-                      )
-                      .toList(),
+              itemCount: context.watch<SpaceProvider>().spaces.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 2.0,
+              ),
+              itemBuilder: (context, index) {
+                final space = context.watch<SpaceProvider>().spaces[index];
+                return _buildSpaceCard(
+                  image: space.category.iconPath,
+                  name: space.name,
+                  usage: space.energyConsumption.toStringAsFixed(1),
+                  cost: (space.energyConsumption * 0.25).toStringAsFixed(2),
+                  showTrend: false,
+                );
+              },
             ),
         ],
       ),
