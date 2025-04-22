@@ -156,11 +156,7 @@ class RoomUsageStats extends StatelessWidget {
                       }).toList(),
                 ),
               ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: Colors.grey,
-              ),
+              Divider(height: 1, thickness: 1, color: Colors.grey.shade300),
               const SizedBox(height: 16),
 
               // Usage summary
@@ -175,7 +171,11 @@ class RoomUsageStats extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.bolt, color: Colors.orange, size: 24),
+                            const Icon(
+                              Icons.bolt,
+                              color: Colors.orange,
+                              size: 24,
+                            ),
                             const SizedBox(width: 8),
                             Flexible(
                               child: Column(
@@ -213,7 +213,10 @@ class RoomUsageStats extends StatelessWidget {
                       ),
                       // Vertical Divider
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         child: VerticalDivider(
                           width: 1,
                           thickness: 1,
