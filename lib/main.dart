@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'features/home/view/home_screen.dart';
+import 'features/home_screen/view/home_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'core/providers/app_state.dart';
-import 'features/home/providers/space_provider.dart';
+import 'features/home_screen/providers/space_provider.dart';
+import 'features/stats_screen/providers/room_selection_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AppState()),
         ChangeNotifierProvider(create: (_) => SpaceProvider()),
+        ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
       ],
       child: const MyApp(),
     ),

@@ -6,7 +6,7 @@ import '../widgets/today_usage_card.dart';
 import '../widgets/my_spaces.dart';
 import '../../../core/providers/app_state.dart';
 import 'package:provider/provider.dart';
-import '../../stats/view/stats_screen.dart';
+import '../../stats_screen/view/stats_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,7 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-      appBar: CustomAppBar(title: _selectedIndex == 0 ? "Home" : "Energy Statistics"),
+      appBar: CustomAppBar(
+        title: _selectedIndex == 0 ? "Home" : "Energy Statistics",
+      ),
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
@@ -38,16 +40,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Consumer<AppState>(
             builder:
                 (context, appState, _) => SingleChildScrollView(
-              child: Column(
-                children: const [
-                  WeatherGreeting(),
-                  SizedBox(height: 16),
-                  TodayUsageCard(),
-                  SizedBox(height: 16),
-                  MySpaces(),
-                ],
-              ),
-            ),
+                  child: Column(
+                    children: const [
+                      WeatherGreeting(),
+                      SizedBox(height: 16),
+                      TodayUsageCard(),
+                      SizedBox(height: 16),
+                      MySpaces(),
+                    ],
+                  ),
+                ),
           ),
           // Stats Screen
           const StatsScreen(),

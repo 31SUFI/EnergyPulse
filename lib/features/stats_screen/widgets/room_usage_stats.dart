@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../features/home/providers/space_provider.dart';
+import '../../home_screen/providers/space_provider.dart';
 import '../models/device_usage_model.dart';
 import '../providers/room_selection_provider.dart';
 
