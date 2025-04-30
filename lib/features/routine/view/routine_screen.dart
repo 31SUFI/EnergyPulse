@@ -32,156 +32,182 @@ class RoutineScreenContent extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Room Selection
-              const Text(
-                'Select your room',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+              Card(
+                elevation: 0,
+                color: const Color(0xFFF8F9FE),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(color: Colors.grey[200]!),
                 ),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<Space>(
-                value: routineProvider.selectedSpace,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-                items:
-                    spaces.map((space) {
-                      return DropdownMenuItem(
-                        value: space,
-                        child: Text(space.name),
-                      );
-                    }).toList(),
-                onChanged: (space) {
-                  if (space != null) routineProvider.setSelectedSpace(space);
-                },
-              ),
-              const SizedBox(height: 24),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'New Smart AI Routine',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
 
-              // Routine Name
-              const Text(
-                'Name your routine',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                onChanged: routineProvider.setRoutineName,
-                decoration: InputDecoration(
-                  hintText: "Oliver's Bed-time routine",
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
+                      // Room Selection
+                      const Text(
+                        'Select your room',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<Space>(
+                        value: routineProvider.selectedSpace,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                        items:
+                            spaces.map((space) {
+                              return DropdownMenuItem(
+                                value: space,
+                                child: Text(space.name),
+                              );
+                            }).toList(),
+                        onChanged: (space) {
+                          if (space != null) routineProvider.setSelectedSpace(space);
+                        },
+                      ),
+                      const SizedBox(height: 24),
 
-              // Frequency Selection
-              const Text(
-                'When do you want to follow this routine?',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: routineProvider.frequency,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-                items:
-                    ['Everyday', 'Weekdays', 'Weekends', 'Custom']
-                        .map(
-                          (freq) => DropdownMenuItem(
-                            value: freq,
-                            child: Text(
-                              freq,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
-                              ),
+                      // Routine Name
+                      const Text(
+                        'Name your routine',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        onChanged: routineProvider.setRoutineName,
+                        decoration: InputDecoration(
+                          hintText: "Oliver's Bed-time routine",
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
-                        )
-                        .toList(),
-                onChanged: (value) {
-                  if (value != null) routineProvider.setFrequency(value);
-                },
-              ),
-              const SizedBox(height: 24),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
 
-              // Devices List
-              if (routineProvider.selectedSpace != null) ...[
-                const Text(
-                  'Devices in your routine',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                      // Frequency Selection
+                      const Text(
+                        'When do you want to follow this routine?',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: routineProvider.frequency,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                        items:
+                            ['Everyday', 'Weekdays', 'Weekends', 'Custom']
+                                .map(
+                                  (freq) => DropdownMenuItem(
+                                    value: freq,
+                                    child: Text(
+                                      freq,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) {
+                          if (value != null) routineProvider.setFrequency(value);
+                        },
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Devices List
+                      if (routineProvider.selectedSpace != null) ...[
+                        const Text(
+                          'Devices in your routine',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ...routineProvider.devices.map((device) {
+                          return DeviceRoutineCard(
+                            device: device,
+                            onUpdate: routineProvider.updateDeviceRoutine,
+                          );
+                        }),
+                      ],
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                ...routineProvider.devices.map((device) {
-                  return DeviceRoutineCard(
-                    device: device,
-                    onUpdate: routineProvider.updateDeviceRoutine,
-                  );
-                }),
-              ],
-              const SizedBox(height: 24),
+              ),
+              const SizedBox(height: 16),
 
               // Action Buttons
               Row(
