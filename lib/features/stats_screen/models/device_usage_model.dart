@@ -1,11 +1,19 @@
 import 'dart:math' as math;
+import '../../../core/config/device_config.dart';
 import '../../home_screen/model/space_model.dart';
 
 class DeviceUsage {
   final String deviceName;
+  final String deviceIcon;
   final double usage; // in kWh
+  final String? currentMode;
 
-  DeviceUsage({required this.deviceName, required this.usage});
+  DeviceUsage({
+    required this.deviceName,
+    required this.deviceIcon,
+    required this.usage,
+    this.currentMode,
+  });
 }
 
 class RoomStats {
@@ -21,55 +29,31 @@ class RoomStats {
     required this.estimatedCost,
   });
 
-  static final Map<SpaceCategory, List<String>> _devicesByCategory = {
-    SpaceCategory.bedroom: [
-      'Lights',
-      'AC',
-      'TV',
-      'Phone Charger',
-      'Laptop Charger',
-    ],
-    SpaceCategory.bathroom: [
-      'Water Heater',
-      'Hair Dryer',
-      'Exhaust Fan',
-      'Lights',
-    ],
-    SpaceCategory.kitchen: [
-      'Refrigerator',
-      'Microwave',
-      'Coffee Maker',
-      'Dishwasher',
-      'Lights',
-    ],
-    SpaceCategory.familyhall: [
-      'TV',
-      'AC',
-      'Game Console',
-      'Smart Lights',
-      'Sound System',
-    ],
-  };
-
   // Generate random but consistent stats for a space
   static RoomStats getStatsForSpace(Space space) {
-    final random = math.Random(
-      space.name.hashCode,
-    ); // Use consistent seed for same room
-    final deviceList = _devicesByCategory[space.category] ?? [];
-    final numDevices = math.min(4, deviceList.length);
-
-    final devices =
-        deviceList
-            .take(numDevices)
-            .map(
-              (name) => DeviceUsage(
-                deviceName: name,
-                usage:
-                    (random.nextDouble() * 8 + 2).roundToDouble(), // 2-10 kWh
-              ),
-            )
-            .toList();
+    final random = math.Random(space.name.hashCode); // Use consistent seed for same room
+    
+    // Get devices from central config
+    final deviceInfos = DeviceConfig.getDevicesForSpace(space.name, space.category);
+    
+    final devices = deviceInfos.map((deviceInfo) {
+      final usage = (random.nextDouble() * 8 + 2).roundToDouble(); // 2-10 kWh
+      String? currentMode;
+      
+      // If device has modes, randomly select one
+      if (deviceInfo.supportedModes.isNotEmpty) {
+        currentMode = deviceInfo.supportedModes[
+          random.nextInt(deviceInfo.supportedModes.length)
+        ];
+      }
+      
+      return DeviceUsage(
+        deviceName: deviceInfo.name,
+        deviceIcon: deviceInfo.icon,
+        usage: usage,
+        currentMode: currentMode,
+      );
+    }).toList();
 
     final totalUsage = devices.fold<double>(
       0,

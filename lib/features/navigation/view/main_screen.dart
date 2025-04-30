@@ -5,6 +5,7 @@ import '../../../global widgets/custom_app_bar.dart';
 import '../../../global widgets/custom_bottom_nav_bar.dart';
 import '../../home_screen/view/home_screen.dart';
 import '../../stats_screen/view/stats_screen.dart';
+import '../../routine/view/routine_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -23,7 +24,7 @@ class MainScreen extends StatelessWidget {
             children: const [
               HomeScreen(),
               StatsScreen(),
-              Center(child: Text('Routines Coming Soon')),
+              RoutineScreen(),
               Center(child: Text('Rewards Coming Soon')),
             ],
           ),
@@ -43,7 +44,7 @@ class MainScreen extends StatelessWidget {
       case 1:
         return 'Energy Statistics';
       case 2:
-        return 'Routines';
+        return 'Smart AI Routine';
       case 3:
         return 'Rewards';
       default:

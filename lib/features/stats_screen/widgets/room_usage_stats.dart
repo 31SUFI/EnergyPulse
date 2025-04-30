@@ -99,25 +99,28 @@ class RoomUsageStats extends StatelessWidget {
               // Device usage bars
               SizedBox(
                 height: 280,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
-                      stats.devices.map((device) {
-                        // Find max usage to scale bars properly
-                        final double maxUsage = stats.devices
-                            .map((d) => d.usage)
-                            .reduce((a, b) => a > b ? a : b);
-                        // Scale height based on max usage
-                        final double heightPercentage = device.usage / maxUsage;
-                        return SizedBox(
-                          width: 60,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: stats.devices.map((device) {
+                      // Find max usage to scale bars properly
+                      final double maxUsage = stats.devices
+                          .map((d) => d.usage)
+                          .reduce((a, b) => a > b ? a : b);
+                      // Scale height based on max usage
+                      final double heightPercentage = device.usage / maxUsage;
+                      
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: SizedBox(
+                          width: 70,
                           child: Column(
                             children: [
                               // Fixed height for top spacing and kWh text
                               SizedBox(
                                 height: 40,
                                 child: Text(
-                                  '${device.usage} kWh',
+                                  '${device.usage.toStringAsFixed(1)} kWh',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.textSecondary,
@@ -133,8 +136,13 @@ class RoomUsageStats extends StatelessWidget {
                                     width: 60,
                                     height: 180 * heightPercentage,
                                     decoration: BoxDecoration(
-                                      color: AppColors.secondary.withOpacity(
-                                        0.1,
+                                      gradient: LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        colors: [
+                                          AppColors.secondary.withOpacity(0.1),
+                                          AppColors.secondary.withOpacity(0.3),
+                                        ],
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -146,7 +154,7 @@ class RoomUsageStats extends StatelessWidget {
                                 height: 40,
                                 child: Center(
                                   child: Text(
-                                    device.deviceName,
+                                    _getShortDeviceName(device.deviceName),
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontSize: 12,
@@ -157,8 +165,10 @@ class RoomUsageStats extends StatelessWidget {
                               ),
                             ],
                           ),
-                        );
-                      }).toList(),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               Divider(height: 1, thickness: 1, color: Colors.grey.shade300),
@@ -196,7 +206,7 @@ class RoomUsageStats extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '${stats.totalUsage} kWh',
+                                        '${stats.totalUsage.toStringAsFixed(1)} kWh',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
@@ -239,12 +249,10 @@ class RoomUsageStats extends StatelessWidget {
                                 color: Colors.orange,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Text(
-                                '',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              child: const Icon(
+                                Icons.attach_money,
+                                color: Colors.white,
+                                size: 16,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -260,7 +268,7 @@ class RoomUsageStats extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '£ ${stats.estimatedCost.toStringAsFixed(2)}',
+                                    '\$${stats.estimatedCost.toStringAsFixed(2)}',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -282,5 +290,18 @@ class RoomUsageStats extends StatelessWidget {
         );
       },
     );
+  }
+
+  // Helper method to shorten device names
+  String _getShortDeviceName(String name) {
+    // Remove 'Smart' prefix if present
+    name = name.replaceAll('Smart ', '');
+    
+    // If name has multiple words and is too long, use first word
+    if (name.length > 8 && name.contains(' ')) {
+      return name.split(' ')[0];
+    }
+    
+    return name;
   }
 }
