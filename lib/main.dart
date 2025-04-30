@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'features/home_screen/view/home_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'core/providers/app_state.dart';
+import 'core/providers/navigation_state.dart';
 import 'features/home_screen/providers/space_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
+import 'features/navigation/view/main_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppState()),
+        ChangeNotifierProvider(create: (_) => NavigationState()),
         ChangeNotifierProvider(create: (_) => SpaceProvider()),
         ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
       ],
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'AnekLatin',
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const MainScreen(),
     );
   }
 }
