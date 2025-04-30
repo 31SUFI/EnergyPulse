@@ -5,6 +5,7 @@ import 'core/constants/app_colors.dart';
 import 'core/providers/app_state.dart';
 import 'core/providers/navigation_state.dart';
 import 'features/home_screen/providers/space_provider.dart';
+import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
 import 'features/navigation/view/main_screen.dart';
 
@@ -23,6 +24,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => NavigationState()),
         ChangeNotifierProvider(create: (_) => SpaceProvider()),
         ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
+        ChangeNotifierProvider(create: (_) => MonthlyLimitProvider()),
       ],
       child: const MyApp(),
     ),
