@@ -64,19 +64,3 @@ class _NotificationButton extends StatelessWidget {
     );
   }
 }
-
-class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(right: 16.0),
-      child: CircleAvatar(
-        radius: 16,
-        backgroundColor: AppColors.cardBackground,
-        child: Icon(Icons.person_outline, color: AppColors.textPrimary),
-      ),
-    );
-  }
-}

@@ -43,7 +43,7 @@ class MainScreen extends StatelessWidget {
       case 1:
         return 'Energy Statistics';
       case 2:
-        return 'Smart AI Routine';
+        return 'Smart Routine';
       case 3:
         return 'Profile';
       default:

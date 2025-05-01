@@ -273,7 +273,7 @@ class RoutineScreenContent extends StatelessWidget {
                           const Icon(Icons.play_arrow, size: 20),
                           const SizedBox(width: 8),
                           const Text(
-                            'Start AI Routine',
+                            'Start Routine',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
