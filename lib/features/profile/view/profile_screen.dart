@@ -289,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         text: 'DUET Students',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const TextSpan(text: ' with'),
+                      const TextSpan(text: ' with '),
                     ],
                   ),
                 ),
