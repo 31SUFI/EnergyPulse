@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const CustomAppBar({super.key, required this.title});
+  final List<Widget>? actions;
+  const CustomAppBar({super.key, required this.title, this.actions});
 
   static const _titleStyle = TextStyle(
     fontFamily: 'AnekLatin',
@@ -23,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: false,
 
-      actions: const [_NotificationButton()],
+      actions: actions,
     );
   }
 
@@ -41,26 +42,6 @@ class _MenuButton extends StatelessWidget {
       onPressed: () {
         // TODO: Implement drawer
       },
-    );
-  }
-}
-
-class _NotificationButton extends StatelessWidget {
-  const _NotificationButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: IconButton(
-        icon: const Icon(
-          Icons.notifications_none_outlined,
-          color: AppColors.textPrimary,
-        ),
-        onPressed: () {
-          // TODO: Implement notifications
-        },
-      ),
     );
   }
 }
