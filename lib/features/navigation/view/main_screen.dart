@@ -6,6 +6,7 @@ import '../../../global widgets/custom_bottom_nav_bar.dart';
 import '../../home_screen/view/home_screen.dart';
 import '../../stats_screen/view/stats_screen.dart';
 import '../../routine/view/routine_screen.dart';
+import '../../profile/view/profile_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -16,16 +17,14 @@ class MainScreen extends StatelessWidget {
       builder: (context, navigationState, _) {
         return Scaffold(
           backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-          appBar: CustomAppBar(
-            title: _getTitle(navigationState.currentIndex),
-          ),
+          appBar: CustomAppBar(title: _getTitle(navigationState.currentIndex)),
           body: IndexedStack(
             index: navigationState.currentIndex,
             children: const [
               HomeScreen(),
               StatsScreen(),
               RoutineScreen(),
-              Center(child: Text('Rewards Coming Soon')),
+              ProfileScreen(),
             ],
           ),
           bottomNavigationBar: CustomBottomNavBar(
@@ -46,7 +45,7 @@ class MainScreen extends StatelessWidget {
       case 2:
         return 'Smart AI Routine';
       case 3:
-        return 'Rewards';
+        return 'Profile';
       default:
         return 'Home';
     }
