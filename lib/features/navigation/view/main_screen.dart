@@ -18,51 +18,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Add dummy notifications after a short delay
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) return;
-      final notificationState = Provider.of<NotificationState>(context, listen: false);
-      
-      notificationState.addNotification(
-        NotificationItem(
-          title: 'High Energy Usage Alert',
-          message: 'Living Room consumption is 25% above average',
-          time: DateTime.now().subtract(const Duration(minutes: 5)),
-          type: NotificationType.warning,
-        ),
-      );
 
-      notificationState.addNotification(
-        NotificationItem(
-          title: 'Smart Schedule Active',
-          message: 'AC will automatically turn off at 10 PM',
-          time: DateTime.now().subtract(const Duration(hours: 2)),
-          type: NotificationType.info,
-        ),
-      );
-
-      notificationState.addNotification(
-        NotificationItem(
-          title: 'Energy Goal Achieved',
-          message: "You've met your daily energy saving target!",
-          time: DateTime.now().subtract(const Duration(hours: 6)),
-          type: NotificationType.success,
-        ),
-      );
-
-      notificationState.addNotification(
-        NotificationItem(
-          title: 'Device Offline',
-          message: 'Kitchen smart plug is disconnected',
-          time: DateTime.now().subtract(const Duration(days: 1)),
-          type: NotificationType.error,
-        ),
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
