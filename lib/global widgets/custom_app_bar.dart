@@ -23,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: false,
 
-      actions: const [_NotificationButton(), _ProfileAvatar()],
+      actions: const [_NotificationButton()],
     );
   }
 
@@ -50,14 +50,17 @@ class _NotificationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(
-        Icons.notifications_none_outlined,
-        color: AppColors.textPrimary,
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: IconButton(
+        icon: const Icon(
+          Icons.notifications_none_outlined,
+          color: AppColors.textPrimary,
+        ),
+        onPressed: () {
+          // TODO: Implement notifications
+        },
       ),
-      onPressed: () {
-        // TODO: Implement notifications
-      },
     );
   }
 }

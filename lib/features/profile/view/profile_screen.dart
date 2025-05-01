@@ -3,8 +3,33 @@ import '../models/profile_model.dart';
 import '../widgets/profile_section_card.dart';
 import '../../../core/constants/app_colors.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool isFaqExpanded = false;
+  bool isContactExpanded = false;
+
+  final List<Map<String, String>> faqs = [
+    {
+      'question': 'How to add a new device?',
+      'answer': 'Go to My Spaces and tap on the + button to add a new device.',
+    },
+    {
+      'question': 'How to set energy limits?',
+      'answer':
+          'Visit the Home screen and tap on Monthly Limit card to set your desired energy consumption limit.',
+    },
+    {
+      'question': 'How to create routines?',
+      'answer':
+          'Navigate to Smart AI Routine tab and tap Create New Routine to set up automated device controls.',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -74,28 +99,13 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
 
-            // Account Management Section
-            ProfileSectionCard(
-              title: 'Account Management',
-              child: ListTile(
-                leading: Icon(Icons.lock_outline, color: AppColors.primary),
-                title: Text(
-                  'Change Password',
-                  style: TextStyle(color: AppColors.textPrimary),
-                ),
-                trailing: Icon(Icons.chevron_right, color: AppColors.primary),
-                onTap: () {
-                  // TODO: Implement password change
-                },
-              ),
-            ),
-
             // Support & Help Section
             ProfileSectionCard(
               title: 'Support & Help',
               child: Column(
                 children: [
-                  ListTile(
+                  // FAQ Section
+                  ExpansionTile(
                     leading: Icon(
                       Icons.question_answer_outlined,
                       color: AppColors.primary,
@@ -104,15 +114,45 @@ class ProfileScreen extends StatelessWidget {
                       'FAQ',
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: AppColors.primary,
+                    subtitle: Text(
+                      'Get answers to common questions',
+                      style: TextStyle(color: AppColors.textSecondary),
                     ),
-                    onTap: () {
-                      // TODO: Navigate to FAQ
-                    },
+                    children:
+                        faqs
+                            .map(
+                              (faq) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      faq['question']!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      faq['answer']!,
+                                      style: TextStyle(
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                    const Divider(),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(),
                   ),
-                  ListTile(
+
+                  // Contact Support Section
+                  ExpansionTile(
                     leading: Icon(
                       Icons.support_agent_outlined,
                       color: AppColors.primary,
@@ -121,14 +161,37 @@ class ProfileScreen extends StatelessWidget {
                       'Contact Support',
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: AppColors.primary,
+                    subtitle: Text(
+                      'Available 24/7 for assistance',
+                      style: TextStyle(color: AppColors.textSecondary),
                     ),
-                    onTap: () {
-                      // TODO: Navigate to Support
-                    },
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.message_rounded,
+                          color: AppColors.success,
+                        ),
+                        title: const Text('+92 315 0261059'),
+                        subtitle: const Text('WhatsApp Support'),
+                        onTap: () {
+                          // TODO: Open WhatsApp
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(
+                          Icons.email_outlined,
+                          color: AppColors.primary,
+                        ),
+                        title: const Text('msufiyan.dev@gmail.com'),
+                        subtitle: const Text('Email Support'),
+                        onTap: () {
+                          // TODO: Open email client
+                        },
+                      ),
+                    ],
                   ),
+
+                  // Terms and Privacy
                   ListTile(
                     leading: Icon(
                       Icons.description_outlined,
@@ -138,6 +201,10 @@ class ProfileScreen extends StatelessWidget {
                       'Terms of Service & Privacy Policy',
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
+                    subtitle: Text(
+                      'Read our policies and terms',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
                     trailing: Icon(
                       Icons.chevron_right,
                       color: AppColors.primary,
@@ -146,16 +213,91 @@ class ProfileScreen extends StatelessWidget {
                       // TODO: Navigate to Terms
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'App Version 1.0.0',
+                ],
+              ),
+            ),
+
+            // Account Management Section
+            ProfileSectionCard(
+              title: 'Account Management',
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.lock_outline, color: AppColors.primary),
+                    title: Text(
+                      'Change Password',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    subtitle: Text(
+                      'Update your account password',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: AppColors.primary,
+                    ),
+                    onTap: () {
+                      // TODO: Implement password change
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.logout_rounded, color: AppColors.error),
+                    title: Text(
+                      'Logout',
+                      style: TextStyle(color: AppColors.error),
+                    ),
+                    subtitle: Text(
+                      'Sign out from your account',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                    trailing: Icon(Icons.chevron_right, color: AppColors.error),
+                    onTap: () {
+                      // TODO: Implement logout
+                    },
                   ),
                 ],
               ),
             ),
+
+            // App Version and Credits
+            const SizedBox(height: 24),
+            RichText(
+              text: TextSpan(
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                children: [
+                  const TextSpan(text: 'App Version '),
+                  TextSpan(
+                    text: '1.0.0',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                    ),
+                    children: [
+                      const TextSpan(text: 'Developed by '),
+                      TextSpan(
+                        text: 'DUET Students',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const TextSpan(text: ' with'),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.favorite, color: AppColors.error, size: 16),
+                const SizedBox(width: 2),
+              ],
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),

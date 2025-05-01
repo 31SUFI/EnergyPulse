@@ -47,8 +47,8 @@ class CustomBottomNavBar extends StatelessWidget {
               label: 'Routines',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events),
-              label: 'Rewards',
+              icon: Icon(Icons.account_circle_rounded),
+              label: 'Profile'
             ),
           ],
         ),

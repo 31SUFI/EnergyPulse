@@ -15,8 +15,8 @@ class ProfileModel {
 
   // Dummy data
   static ProfileModel dummyProfile = ProfileModel(
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    name: 'Muhammad Sufiyan',
+    email: 'msufiyan.dev@gmail.com',
     profilePicture: 'https://i.pravatar.cc/150',
     householdId: 'HH-2025-001',
     accountType: 'Residential',

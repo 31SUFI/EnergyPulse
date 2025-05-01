@@ -1,3 +1,4 @@
+import 'package:energy_meter_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../features/home_screen/model/space_model.dart';
@@ -35,7 +36,7 @@ class RoutineScreenContent extends StatelessWidget {
             children: [
               Card(
                 elevation: 0,
-                color: const Color(0xFFF8F9FE),
+                color: AppColors.cardBackground,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                   side: BorderSide(color: Colors.grey[200]!),
@@ -46,7 +47,7 @@ class RoutineScreenContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'New Smart AI Routine',
+                        'New Smart Routine',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -76,7 +77,14 @@ class RoutineScreenContent extends StatelessWidget {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
+                            borderSide: BorderSide(color: AppColors.secondary),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColors.secondary,
+                              width: 2,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -91,7 +99,8 @@ class RoutineScreenContent extends StatelessWidget {
                               );
                             }).toList(),
                         onChanged: (space) {
-                          if (space != null) routineProvider.setSelectedSpace(space);
+                          if (space != null)
+                            routineProvider.setSelectedSpace(space);
                         },
                       ),
                       const SizedBox(height: 24),
@@ -119,12 +128,13 @@ class RoutineScreenContent extends StatelessWidget {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
+                            borderSide: BorderSide(color: AppColors.secondary),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor,
+                              color: AppColors.secondary,
+                              width: 2,
                             ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
@@ -156,7 +166,14 @@ class RoutineScreenContent extends StatelessWidget {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
+                            borderSide: BorderSide(color: AppColors.secondary),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColors.secondary,
+                              width: 2,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -179,7 +196,8 @@ class RoutineScreenContent extends StatelessWidget {
                                 )
                                 .toList(),
                         onChanged: (value) {
-                          if (value != null) routineProvider.setFrequency(value);
+                          if (value != null)
+                            routineProvider.setFrequency(value);
                         },
                       ),
                       const SizedBox(height: 24),
