@@ -18,8 +18,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<NavigationState, NotificationState>(
@@ -49,7 +47,10 @@ class _MainScreenState extends State<MainScreen> {
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-                top: notificationState.isVisible ? 0 : -(MediaQuery.of(context).size.height),
+                top:
+                    notificationState.isVisible
+                        ? 0
+                        : -(MediaQuery.of(context).size.height),
                 right: 0,
                 left: 0,
                 child: const NotificationPanel(),
