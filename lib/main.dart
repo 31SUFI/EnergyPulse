@@ -1,6 +1,5 @@
 import 'package:energy_meter_app/features/auth/view/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'core/constants/app_colors.dart';
 import 'core/providers/app_state.dart';
@@ -9,16 +8,8 @@ import 'core/providers/notification_state.dart';
 import 'features/home_screen/providers/space_provider.dart';
 import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
-import 'features/navigation/view/main_screen.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
   runApp(
     MultiProvider(
       providers: [

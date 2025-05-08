@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NotificationState extends ChangeNotifier {
   bool _isVisible = false;
-  List<NotificationItem> _notifications = [
+  final List<NotificationItem> _notifications = [
     NotificationItem(
       title: 'High Energy Usage Alert',
       message: 'Living Room consumption is 25% above average',

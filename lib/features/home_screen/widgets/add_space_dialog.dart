@@ -72,7 +72,7 @@ class _AddSpaceDialogState extends State<AddSpaceDialog> {
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.textSecondary.withOpacity(0.3),
+                          color: AppColors.textSecondary.withAlpha(77),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -99,7 +99,7 @@ class _AddSpaceDialogState extends State<AddSpaceDialog> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Container(
+                  SizedBox(
                     height: 100,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -108,23 +108,19 @@ class _AddSpaceDialogState extends State<AddSpaceDialog> {
                         final category = SpaceCategory.values[index];
                         final isSelected = category == _selectedCategory;
                         return GestureDetector(
-                          onTap:
-                              () =>
-                                  setState(() => _selectedCategory = category),
+                          onTap: () => setState(() => _selectedCategory = category),
                           child: Container(
                             width: 80,
                             margin: const EdgeInsets.only(right: 12),
                             decoration: BoxDecoration(
-                              color:
-                                  isSelected
-                                      ? AppColors.primary.withOpacity(0.1)
-                                      : AppColors.cardBackground,
+                              color: isSelected
+                                  ? AppColors.primary.withAlpha(26)
+                                  : AppColors.cardBackground,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color:
-                                    isSelected
-                                        ? AppColors.primary
-                                        : Colors.transparent,
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : Colors.transparent,
                                 width: 2,
                               ),
                             ),
@@ -135,10 +131,12 @@ class _AddSpaceDialogState extends State<AddSpaceDialog> {
                                   category.iconPath,
                                   width: 32,
                                   height: 32,
-                                  color:
-                                      isSelected
-                                          ? AppColors.primary
-                                          : AppColors.textSecondary,
+                                  colorFilter: ColorFilter.mode(
+                                    isSelected
+                                        ? AppColors.primary
+                                        : AppColors.textSecondary,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
@@ -147,10 +145,9 @@ class _AddSpaceDialogState extends State<AddSpaceDialog> {
                                     fontFamily: 'AnekLatin',
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color:
-                                        isSelected
-                                            ? AppColors.primary
-                                            : AppColors.textSecondary,
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : AppColors.textSecondary,
                                   ),
                                 ),
                               ],

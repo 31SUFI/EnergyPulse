@@ -99,8 +99,9 @@ class RoutineScreenContent extends StatelessWidget {
                               );
                             }).toList(),
                         onChanged: (space) {
-                          if (space != null)
+                          if (space != null) {
                             routineProvider.setSelectedSpace(space);
+                          }
                         },
                       ),
                       const SizedBox(height: 24),
@@ -196,8 +197,9 @@ class RoutineScreenContent extends StatelessWidget {
                                 )
                                 .toList(),
                         onChanged: (value) {
-                          if (value != null)
+                          if (value != null) {
                             routineProvider.setFrequency(value);
+                          }
                         },
                       ),
                       const SizedBox(height: 24),

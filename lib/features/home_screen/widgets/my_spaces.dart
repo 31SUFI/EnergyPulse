@@ -40,8 +40,9 @@ class _MySpacesState extends State<MySpaces> {
                 onPressed: () async {
                   final newSpace = await showDialog<Space>(
                     context: context,
-                    builder: (context) => const AddSpaceDialog(),
+                    builder: (dialogContext) => const AddSpaceDialog(),
                   );
+                  if (!mounted) return;
                   if (newSpace != null) {
                     _addNewSpace(context, newSpace);
                   }
@@ -73,7 +74,7 @@ class _MySpacesState extends State<MySpaces> {
                   Icon(
                     Icons.home_outlined,
                     size: 48,
-                    color: AppColors.textSecondary.withOpacity(0.5),
+                    color: AppColors.textSecondary.withAlpha(128),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -81,7 +82,7 @@ class _MySpacesState extends State<MySpaces> {
                     style: TextStyle(
                       fontFamily: 'AnekLatin',
                       fontSize: 16,
-                      color: AppColors.textSecondary.withOpacity(0.5),
+                      color: AppColors.textSecondary.withAlpha(128),
                     ),
                   ),
                 ],
@@ -128,7 +129,7 @@ class _MySpacesState extends State<MySpaces> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -197,11 +198,11 @@ class _MySpacesState extends State<MySpaces> {
                     'assets/images/money.svg',
                     width: 16,
                     height: 16,
-                    color: Colors.amber,
+                    colorFilter: const ColorFilter.mode(Colors.amber, BlendMode.srcIn),
                   ),
                   const SizedBox(width: 2),
                   Text(
-                    '$cost',
+                    cost,
                     style: const TextStyle(
                       fontFamily: 'AnekLatin',
                       fontSize: 14,

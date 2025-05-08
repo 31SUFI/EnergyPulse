@@ -49,7 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.arrow_back),
                   style: IconButton.styleFrom(
-                    backgroundColor: Colors.black.withOpacity(0.05),
+                    backgroundColor: Colors.black.withAlpha(13),
                   ),
                 ),
                 const SizedBox(height: 32),

@@ -26,7 +26,7 @@ class RoomUsageStats extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withAlpha(26),
                 spreadRadius: 2,
                 blurRadius: 8,
                 offset: const Offset(0, 2),
@@ -140,8 +140,8 @@ class RoomUsageStats extends StatelessWidget {
                                         begin: Alignment.bottomCenter,
                                         end: Alignment.topCenter,
                                         colors: [
-                                          AppColors.secondary.withOpacity(0.1),
-                                          AppColors.secondary.withOpacity(0.3),
+                                          AppColors.secondary.withAlpha(26),
+                                          AppColors.secondary.withAlpha(77),
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(8),

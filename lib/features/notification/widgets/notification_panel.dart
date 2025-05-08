@@ -18,7 +18,7 @@ class NotificationPanel extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha(26),
             blurRadius: 10,
             spreadRadius: 2,
           ),
@@ -133,7 +133,7 @@ class _NotificationTile extends StatelessWidget {
       key: UniqueKey(),
       onDismissed: (_) => onDismiss(),
       background: Container(
-        color: AppColors.error.withOpacity(0.1),
+        color: AppColors.error.withAlpha(26),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
         child: Icon(

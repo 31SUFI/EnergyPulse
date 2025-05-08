@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(profile.profilePicture),
-                      backgroundColor: AppColors.primary.withOpacity(0.1),
+                      backgroundColor: AppColors.primary.withAlpha(26),
                     ),
                     const SizedBox(height: 16),
                     Text(
