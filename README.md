@@ -23,7 +23,7 @@ EnergyPulse is an innovative IoT-based smart energy meter mobile application tha
 
 ## 🎥 Demo Video
 
-Watch our project demonstration video: [EnergyPulse Demo](https://drive.google.com/file/d/1SSD7UpS0a4wFY4o4jYCA2tvgx7JoPuEe/view?usp=drive_link)
+Watch our project demonstration video(not finalized but for basic idea about App design and workflow): [EnergyPulse Demo](https://drive.google.com/file/d/1SSD7UpS0a4wFY4o4jYCA2tvgx7JoPuEe/view?usp=drive_link)
 
 ## 🚀 Getting Started
 
