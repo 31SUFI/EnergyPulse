@@ -1,6 +1,8 @@
 import 'package:energy_meter_app/features/auth/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'core/constants/app_colors.dart';
 import 'core/providers/app_state.dart';
 import 'core/providers/navigation_state.dart';
@@ -9,7 +11,11 @@ import 'features/home_screen/providers/space_provider.dart';
 import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [

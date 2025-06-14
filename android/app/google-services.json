@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "884026744808",
+    "firebase_url": "https://energypulse-e24dc-default-rtdb.firebaseio.com",
+    "project_id": "energypulse-e24dc",
+    "storage_bucket": "energypulse-e24dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884026744808:android:16c62750b74ab175078e5d",
+        "android_client_info": {
+          "package_name": "com.example.energy_meter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYHom8sEqbPsvHYCd3CN1lmqwESNw6ZlY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
