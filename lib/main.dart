@@ -11,6 +11,7 @@ import 'features/home_screen/providers/space_provider.dart';
 import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
 import 'features/stats_screen/providers/energy_stats_provider.dart';
+import 'core/services/notification_service.dart';
 
 void main() async {
   try {
@@ -20,6 +21,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     print('Firebase initialized successfully');
+    await NotificationService().initNotifications();
     
     runApp(
       MultiProvider(
