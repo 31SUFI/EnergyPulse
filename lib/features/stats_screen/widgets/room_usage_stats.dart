@@ -3,21 +3,35 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../home_screen/providers/space_provider.dart';
-import '../models/device_usage_model.dart';
 import '../providers/room_selection_provider.dart';
+import '../providers/energy_stats_provider.dart';
 
 class RoomUsageStats extends StatelessWidget {
   const RoomUsageStats({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<RoomSelectionProvider, SpaceProvider>(
-      builder: (context, roomProvider, spaceProvider, _) {
-        final selectedSpace = spaceProvider.spaces.firstWhere(
-          (space) => space.name == roomProvider.selectedRoom,
-          orElse: () => spaceProvider.spaces.first,
-        );
-        final stats = RoomStats.getStatsForSpace(selectedSpace);
+    return Consumer3<RoomSelectionProvider, SpaceProvider, EnergyStatsProvider>(
+      builder: (context, roomProvider, spaceProvider, energyProvider, _) {
+        try {
+          if (spaceProvider.spaces.isEmpty) {
+            return const Center(child: Text('No spaces available'));
+          }
+
+          if (energyProvider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          final selectedSpace = spaceProvider.spaces.firstWhere(
+            (space) => space.name == roomProvider.selectedRoom,
+            orElse: () => spaceProvider.spaces.first,
+          );
+          
+          final stats = energyProvider.getRoomStats(selectedSpace);
+          
+          if (stats.devices.isEmpty) {
+            return const Center(child: Text('No energy data available'));
+          }
 
         return Container(
           padding: const EdgeInsets.all(16),
@@ -288,6 +302,20 @@ class RoomUsageStats extends StatelessWidget {
             ],
           ),
         );
+        } catch (e, stackTrace) {
+          print('Error in RoomUsageStats: $e');
+          print('Stack trace: $stackTrace');
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Error loading energy data: ${e.toString()}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+          );
+        }
       },
     );
   }

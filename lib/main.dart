@@ -10,25 +10,44 @@ import 'core/providers/notification_state.dart';
 import 'features/home_screen/providers/space_provider.dart';
 import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
+import 'features/stats_screen/providers/energy_stats_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AppState()),
-        ChangeNotifierProvider(create: (_) => NavigationState()),
-        ChangeNotifierProvider(create: (_) => NotificationState()),
-        ChangeNotifierProvider(create: (_) => SpaceProvider()),
-        ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
-        ChangeNotifierProvider(create: (_) => MonthlyLimitProvider()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    print('Initializing Firebase...');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialized successfully');
+    
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AppState()),
+          ChangeNotifierProvider(create: (_) => NavigationState()),
+          ChangeNotifierProvider(create: (_) => NotificationState()),
+          ChangeNotifierProvider(create: (_) => SpaceProvider()),
+          ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
+          ChangeNotifierProvider(create: (_) => MonthlyLimitProvider()),
+          ChangeNotifierProvider(create: (_) => EnergyStatsProvider()),
+        ],
+        child: const MyApp(),
+      ),
+    );
+  } catch (e, stackTrace) {
+    print('Error initializing app: $e');
+    print('Stack trace: $stackTrace');
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Text('Error initializing app: $e'),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
