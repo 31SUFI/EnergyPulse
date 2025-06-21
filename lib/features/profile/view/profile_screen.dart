@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/profile_model.dart';
 import '../widgets/profile_section_card.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../auth/services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,6 +12,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthService _authService = AuthService();
   bool isFaqExpanded = false;
   bool isContactExpanded = false;
 
@@ -251,8 +253,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
                     trailing: Icon(Icons.chevron_right, color: AppColors.error),
-                    onTap: () {
-                      // TODO: Implement logout
+                    onTap: () async {
+                      await _authService.signOut();
                     },
                   ),
                 ],

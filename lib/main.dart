@@ -1,4 +1,4 @@
-import 'package:energy_meter_app/features/auth/view/login_screen.dart';
+import 'package:energy_meter_app/features/auth/view/auth_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'AnekLatin',
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const AuthWrapper(),
     );
   }
 }

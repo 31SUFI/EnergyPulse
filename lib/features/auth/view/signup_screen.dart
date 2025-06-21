@@ -1,7 +1,7 @@
+import 'package:energy_meter_app/features/auth/services/auth_service.dart';
+import 'package:energy_meter_app/features/auth/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../features/navigation/view/main_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,48 +11,86 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  bool _obscurePassword = true;
-  String _selectedPropertyType = 'Residential';
-
-  final _houseIdController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _houseIdController = TextEditingController();
+  final _authService = AuthService();
+
+  String? _selectedPropertyType = 'Residential';
+  final List<String> _propertyTypes = ['Residential', 'Commercial', 'Industrial'];
+
+  bool _isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
-    _houseIdController.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _houseIdController.dispose();
     super.dispose();
+  }
+
+  Future<void> _signUp() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final user = await _authService.signUpUser(
+        _nameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        _selectedPropertyType!,
+        _houseIdController.text.trim(),
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (user != null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Signup successful! Please login.')),
+          );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign up failed. The email might already be in use.')),
+          );
+        }
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.tertiary, AppColors.background],
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.black.withAlpha(13),
-                  ),
-                ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
                 const Text(
                   'Create Account',
                   style: TextStyle(
@@ -62,68 +100,47 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Sign up to monitor your energy usage',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Color(0xFF9E9E9E),
+                    color: Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 32),
-                TextField(
+                const SizedBox(height: 40),
+                TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Full Name',
-                    labelStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-                    prefixIcon: const Icon(Icons.person_outline, color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.cardBackground),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.black, width: 2),
-                    ),
-                  ),
+                  decoration: _buildInputDecoration(label: 'Full Name', icon: Icons.person_outline),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your full name';
+                    }
+                    return null;
+                  },
                 ),
-                const SizedBox(height: 16),
-                TextField(
+                const SizedBox(height: 20),
+                TextFormField(
                   controller: _emailController,
+                  decoration: _buildInputDecoration(label: 'Email', icon: Icons.email_outlined),
                   keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-                    prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.cardBackground),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.black, width: 2),
-                    ),
-                  ),
+                  validator: (value) {
+                    if (value == null || !value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
                 ),
-                const SizedBox(height: 16),
-                TextField(
+                const SizedBox(height: 20),
+                TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-                    prefixIcon: const Icon(Icons.lock_outline, color: Colors.black),
+                  decoration: _buildInputDecoration(
+                    label: 'Password',
+                    icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: Colors.black,
+                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        color: Colors.grey[600],
                       ),
                       onPressed: () {
                         setState(() {
@@ -131,140 +148,116 @@ class _SignupScreenState extends State<SignupScreen> {
                         });
                       },
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.cardBackground),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.black, width: 2),
-                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: _selectedPropertyType,
-                  decoration: InputDecoration(
-                    labelText: 'Property Type',
-                    labelStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-                    prefixIcon: const Icon(Icons.home_outlined, color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.cardBackground),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.black, width: 2),
-                    ),
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'Residential',
-                      child: Text('Residential'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Commercial',
-                      child: Text('Commercial'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedPropertyType = value;
-                      });
+                  validator: (value) {
+                    if (value == null || value.length < 6) {
+                      return 'Password must be at least 6 characters';
                     }
+                    return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _houseIdController,
-                  decoration: InputDecoration(
-                    labelText: 'House ID',
-                    labelStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-                    hintText: 'Format: HH-YYYY-XXX',
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 14,
-                    ),
-                    prefixIcon: const Icon(Icons.tag_outlined, color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColors.cardBackground),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.black, width: 2),
-                    ),
-                  ),
+                const SizedBox(height: 20),
+                DropdownButtonFormField<String>(
+                  value: _selectedPropertyType,
+                  decoration: _buildInputDecoration(label: 'Property Type', icon: Icons.home_outlined),
+                  items: _propertyTypes.map((String type) {
+                    return DropdownMenuItem<String>(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedPropertyType = newValue;
+                    });
+                  },
+                  validator: (value) => value == null ? 'Please select a property type' : null,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _houseIdController,
+                  decoration: _buildInputDecoration(label: 'House ID', icon: Icons.tag),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your House ID';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 40),
                 SizedBox(
                   width: double.infinity,
                   height: 56,
-                  child: FilledButton(
-                    onPressed: () {
-                      // For now, navigate to MainScreen on signup
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const MainScreen(),
+                  child: _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: _signUp,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      );
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: OutlinedButton.icon(
+                    icon: SvgPicture.asset('assets/icons/google.svg', height: 24),
+                    label: const Text(
+                      'Continue with Google',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    onPressed: () {
+                      // TODO: Implement Google Sign-In
                     },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.black,
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.grey[300]!),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.background,
-                      ),
-                    ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                _GoogleLoginButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen(),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'Already have an account? ',
-                      style: TextStyle(color: Color(0xFF9E9E9E)),
+                      style: TextStyle(color: Colors.grey[600]),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        );
+                      },
                       child: const Text(
                         'Login',
                         style: TextStyle(
                           color: Colors.black,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -272,44 +265,22 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
-}
 
-class _GoogleLoginButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const _GoogleLoginButton({required this.onPressed}) : super();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white,
-          side: BorderSide(color: AppColors.cardBackground),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: SvgPicture.asset('assets/icons/google.svg', height: 24),
-            ),
-            const Text(
-              'Continue with Google',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        ),
+  InputDecoration _buildInputDecoration({required String label, required IconData icon, Widget? suffixIcon}) {
+    return InputDecoration(
+      prefixIcon: Icon(icon, color: Colors.grey[600]),
+      labelText: label,
+      labelStyle: TextStyle(color: Colors.grey[600]),
+      suffixIcon: suffixIcon,
+      filled: true,
+      fillColor: Colors.grey[100],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.black, width: 1.5),
       ),
     );
   }
