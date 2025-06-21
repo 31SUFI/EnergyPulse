@@ -1,4 +1,4 @@
-import 'package:energy_meter_app/features/auth/services/auth_service.dart';
+import 'package:energy_meter_app/core/services/auth_service.dart';
 import 'package:energy_meter_app/features/auth/view/signup_screen.dart';
 import 'package:energy_meter_app/features/navigation/view/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login failed. Please check your credentials.')),
+            const SnackBar(
+              content: Text('Login failed. Please check your credentials.'),
+            ),
           );
         }
       }
@@ -103,7 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Monitor your energy, control your home',
                             style: TextStyle(
                               color:
-                                  Theme.of(context).colorScheme.onSurfaceVariant,
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                               fontSize: 16,
                             ),
                           ),
@@ -125,11 +129,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.cardBackground),
+                          borderSide: BorderSide(
+                            color: AppColors.cardBackground,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 2,
+                          ),
                         ),
                       ),
                       validator: (value) {
@@ -146,7 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-                        prefixIcon: const Icon(Icons.lock_outline, color: Colors.black),
+                        prefixIcon: const Icon(
+                          Icons.lock_outline,
+                          color: Colors.black,
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword
@@ -165,11 +177,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppColors.cardBackground),
+                          borderSide: BorderSide(
+                            color: AppColors.cardBackground,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 2,
+                          ),
                         ),
                       ),
                       validator: (value) {
@@ -196,25 +213,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: double.infinity,
                       height: 56,
-                      child: _isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : FilledButton(
-                              onPressed: _signIn,
-                              style: FilledButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                      child:
+                          _isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : FilledButton(
+                                onPressed: _signIn,
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.background,
+                                  ),
                                 ),
                               ),
-                              child: const Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.background,
-                                ),
-                              ),
-                            ),
                     ),
                     const SizedBox(height: 24),
                     Center(

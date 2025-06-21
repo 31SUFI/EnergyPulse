@@ -1,28 +1,35 @@
 import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:intl/intl.dart';
 import '../../../core/services/energy_service.dart';
+import '../../../core/services/monthly_limit_service.dart';
 
 class MonthlyLimitProvider with ChangeNotifier {
   final EnergyService _energyService = EnergyService();
-  static const String _limitKey = 'monthly_limit';
-
   double _limit = 500; // Default limit of 500 units
   List<double> _dailyUsage = [];
   double _currentEnergy = 0;
-  late final SharedPreferences _prefs;
+  final MonthlyLimitService _limitService = MonthlyLimitService();
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
 
   MonthlyLimitProvider() {
     _init();
   }
 
+  Stream<double>? _limitStream;
+
   Future<void> _init() async {
-    _prefs = await SharedPreferences.getInstance();
-    _limit = _prefs.getDouble(_limitKey) ?? 500;
+    _isLoading = true;
+    notifyListeners();
+    // Listen to real-time changes from RTDB
+    _limitStream = _limitService.getMonthlyLimitStream();
+    _limitStream!.listen((limitFromDB) {
+      _limit = limitFromDB;
+      notifyListeners();
+    });
     _initializeDailyUsage();
     _setupEnergyListener();
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -73,10 +80,12 @@ class MonthlyLimitProvider with ChangeNotifier {
 
   Future<void> setLimit(double newLimit) async {
     if (newLimit <= 0) return;
-
     _limit = newLimit;
-    await _prefs.setDouble(_limitKey, newLimit);
+    _isLoading = true;
+    notifyListeners();
+    await _limitService.setMonthlyLimit(newLimit);
     _initializeDailyUsage(); // Reinitialize daily usage when limit changes
+    _isLoading = false;
     notifyListeners();
   }
 

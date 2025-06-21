@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/profile_model.dart';
 import '../widgets/profile_section_card.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../auth/services/auth_service.dart';
+import '../../../core/services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

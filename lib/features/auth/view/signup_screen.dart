@@ -1,4 +1,4 @@
-import 'package:energy_meter_app/features/auth/services/auth_service.dart';
+import 'package:energy_meter_app/core/services/auth_service.dart';
 import 'package:energy_meter_app/features/auth/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +19,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final _authService = AuthService();
 
   String? _selectedPropertyType = 'Residential';
-  final List<String> _propertyTypes = ['Residential', 'Commercial', 'Industrial'];
+  final List<String> _propertyTypes = [
+    'Residential',
+    'Commercial',
+    'Industrial',
+  ];
 
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -63,7 +67,11 @@ class _SignupScreenState extends State<SignupScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign up failed. The email might already be in use.')),
+            const SnackBar(
+              content: Text(
+                'Sign up failed. The email might already be in use.',
+              ),
+            ),
           );
         }
       }
@@ -102,15 +110,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Sign up to monitor your energy usage',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 40),
                 TextFormField(
                   controller: _nameController,
-                  decoration: _buildInputDecoration(label: 'Full Name', icon: Icons.person_outline),
+                  decoration: _buildInputDecoration(
+                    label: 'Full Name',
+                    icon: Icons.person_outline,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your full name';
@@ -121,7 +129,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
-                  decoration: _buildInputDecoration(label: 'Email', icon: Icons.email_outlined),
+                  decoration: _buildInputDecoration(
+                    label: 'Email',
+                    icon: Icons.email_outlined,
+                  ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || !value.contains('@')) {
@@ -139,7 +150,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                         color: Colors.grey[600],
                       ),
                       onPressed: () {
@@ -159,24 +172,35 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: _selectedPropertyType,
-                  decoration: _buildInputDecoration(label: 'Property Type', icon: Icons.home_outlined),
-                  items: _propertyTypes.map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
-                    );
-                  }).toList(),
+                  decoration: _buildInputDecoration(
+                    label: 'Property Type',
+                    icon: Icons.home_outlined,
+                  ),
+                  items:
+                      _propertyTypes.map((String type) {
+                        return DropdownMenuItem<String>(
+                          value: type,
+                          child: Text(type),
+                        );
+                      }).toList(),
                   onChanged: (newValue) {
                     setState(() {
                       _selectedPropertyType = newValue;
                     });
                   },
-                  validator: (value) => value == null ? 'Please select a property type' : null,
+                  validator:
+                      (value) =>
+                          value == null
+                              ? 'Please select a property type'
+                              : null,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _houseIdController,
-                  decoration: _buildInputDecoration(label: 'House ID', icon: Icons.tag),
+                  decoration: _buildInputDecoration(
+                    label: 'House ID',
+                    icon: Icons.tag,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your House ID';
@@ -188,32 +212,36 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 56,
-                  child: _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : ElevatedButton(
-                          onPressed: _signUp,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                  child:
+                      _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ElevatedButton(
+                            onPressed: _signUp,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: OutlinedButton.icon(
-                    icon: SvgPicture.asset('assets/icons/google.svg', height: 24),
+                    icon: SvgPicture.asset(
+                      'assets/icons/google.svg',
+                      height: 24,
+                    ),
                     label: const Text(
                       'Continue with Google',
                       style: TextStyle(
@@ -244,7 +272,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -266,7 +296,11 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  InputDecoration _buildInputDecoration({required String label, required IconData icon, Widget? suffixIcon}) {
+  InputDecoration _buildInputDecoration({
+    required String label,
+    required IconData icon,
+    Widget? suffixIcon,
+  }) {
     return InputDecoration(
       prefixIcon: Icon(icon, color: Colors.grey[600]),
       labelText: label,

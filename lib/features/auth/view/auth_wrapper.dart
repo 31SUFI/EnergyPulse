@@ -1,4 +1,4 @@
-import 'package:energy_meter_app/features/auth/services/auth_service.dart';
+import 'package:energy_meter_app/core/services/auth_service.dart';
 import 'package:energy_meter_app/features/auth/view/login_screen.dart';
 import 'package:energy_meter_app/features/navigation/view/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +15,7 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
         if (snapshot.hasData) {
