@@ -11,6 +11,18 @@ import 'features/home_screen/providers/space_provider.dart';
 import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
 import 'features/stats_screen/providers/energy_stats_provider.dart';
+import 'core/services/energy_monitor_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+Future<void> requestNotificationPermissions() async {
+  final status = await Permission.notification.request();
+  if (status.isDenied) {
+    debugPrint('Notification permission denied.');
+  }
+}
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   try {
@@ -20,7 +32,11 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     print('Firebase initialized successfully');
-    
+
+    // Import and initialize the EnergyMonitorService
+    final energyMonitorService = EnergyMonitorService();
+    await requestNotificationPermissions();
+
     runApp(
       MultiProvider(
         providers: [
@@ -35,16 +51,20 @@ void main() async {
         child: const MyApp(),
       ),
     );
+
+    // After the first frame, initialize EnergyMonitorService with context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = navigatorKey.currentContext;
+      if (context != null) {
+        energyMonitorService.init(context);
+      }
+    });
   } catch (e, stackTrace) {
     print('Error initializing app: $e');
     print('Stack trace: $stackTrace');
     runApp(
       MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: Text('Error initializing app: $e'),
-          ),
-        ),
+        home: Scaffold(body: Center(child: Text('Error initializing app: $e'))),
       ),
     );
   }
@@ -56,6 +76,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Energy Meter',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

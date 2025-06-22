@@ -92,11 +92,10 @@ class MonthlyLimitCard extends StatelessWidget {
             Consumer<MonthlyLimitProvider>(
               builder: (context, monthlyLimitProvider, _) {
                 // Find min and max values for scaling
-                final maxY =
-                    monthlyLimitProvider.limit *
-                    1.1; // 10% above limit for better visualization
-                final minY = 0.0;
-                final maxX = 30.0; // Days in month
+                final limit = monthlyLimitProvider.limit;
+final maxY = (limit > 0 && limit.isFinite) ? limit * 1.1 : 100.0;
+final minY = 0.0;
+final maxX = 30.0; // Days in month
 
                 return SizedBox(
                   height: 200,
@@ -109,8 +108,8 @@ class MonthlyLimitCard extends StatelessWidget {
                       gridData: FlGridData(
                         show: true,
                         drawVerticalLine: true,
-                        horizontalInterval: maxY / 5, // Show 5 horizontal lines
-                        verticalInterval: 5, // Show vertical line every 5 days
+                        horizontalInterval: (maxY / 5).isFinite && (maxY / 5) > 0 ? maxY / 5 : 20.0, // Show 5 horizontal lines
+verticalInterval: 5, // Show vertical line every 5 days
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
                             color: Colors.grey[300]!,
@@ -145,7 +144,7 @@ class MonthlyLimitCard extends StatelessWidget {
                                 axisSide: meta.axisSide,
                                 space: 8,
                                 child: Text(
-                                  'Day ${value.toInt()}',
+                                  'Day ${value.isFinite ? value.toInt() : 0}',
                                   style: const TextStyle(
                                     color: AppColors.textSecondary,
                                     fontSize: 10,
@@ -159,12 +158,12 @@ class MonthlyLimitCard extends StatelessWidget {
                           sideTitles: SideTitles(
                             showTitles: true,
                             reservedSize: 40,
-                            interval: maxY / 4, // Show 4 labels on Y axis
+                            interval: (maxY / 4).isFinite && (maxY / 4) > 0 ? maxY / 4 : 25.0, // Show 4 labels on Y axis
                             getTitlesWidget: (value, meta) {
                               return SideTitleWidget(
                                 axisSide: meta.axisSide,
                                 child: Text(
-                                  value.toInt().toString(),
+                                  value.isFinite ? value.toInt().toString() : '0',
                                   style: const TextStyle(
                                     color: AppColors.textSecondary,
                                     fontSize: 10,
@@ -194,7 +193,7 @@ class MonthlyLimitCard extends StatelessWidget {
                           getTooltipItems: (touchedSpots) {
                             return touchedSpots.map((spot) {
                               return LineTooltipItem(
-                                '${spot.y.toInt()} units\nDay ${spot.x.toInt()}',
+                                '${spot.y.isFinite ? spot.y.toInt() : 0} units\nDay ${spot.x.isFinite ? spot.x.toInt() : 0}',
                                 const TextStyle(
                                   color: AppColors.textPrimary,
                                   fontWeight: FontWeight.bold,

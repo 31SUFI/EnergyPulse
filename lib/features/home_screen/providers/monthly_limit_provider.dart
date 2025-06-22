@@ -5,7 +5,7 @@ import '../../../core/services/monthly_limit_service.dart';
 
 class MonthlyLimitProvider with ChangeNotifier {
   final EnergyService _energyService = EnergyService();
-  double _limit = 500; // Default limit of 500 units
+  double _limit = 0; // Default limit of 500 units
   List<double> _dailyUsage = [];
   double _currentEnergy = 0;
   final MonthlyLimitService _limitService = MonthlyLimitService();
@@ -35,33 +35,34 @@ class MonthlyLimitProvider with ChangeNotifier {
 
   void _setupEnergyListener() {
     _energyService.getEnergyReadings().listen((reading) {
-      final newEnergy = double.tryParse(reading['energy']?.toString() ?? '0') ?? 0;
+      final newEnergy =
+          double.tryParse(reading['energy']?.toString() ?? '0') ?? 0;
       debugPrint('Energy reading received: $newEnergy');
-      
+
       if (newEnergy != _currentEnergy) {
         _currentEnergy = newEnergy;
-        
+
         // Update the current day's usage with the new energy value
         _updateDailyUsageWithNewReading(newEnergy);
-        
+
         notifyListeners();
       }
     });
   }
-  
+
   void _updateDailyUsageWithNewReading(double newEnergy) {
     final now = DateTime.now();
     final currentDay = now.day;
-    
+
     // Ensure we have enough days in our list
     while (_dailyUsage.length < currentDay) {
       _dailyUsage.add(0.0);
     }
-    
+
     // Update the current day's usage
     if (currentDay > 0) {
       _dailyUsage[currentDay - 1] = newEnergy;
-      
+
       // Ensure the list doesn't exceed 30 days
       if (_dailyUsage.length > 30) {
         _dailyUsage = _dailyUsage.sublist(0, 30);
@@ -76,7 +77,12 @@ class MonthlyLimitProvider with ChangeNotifier {
   double get currentUsage => _currentEnergy;
 
   // Calculate usage percentage
-  double get usagePercentage => currentUsage / _limit;
+  double get usagePercentage {
+    if (_limit == 0 || _limit.isNaN || _limit.isInfinite) return 0;
+    final percent = currentUsage / _limit;
+    if (percent.isNaN || percent.isInfinite) return 0;
+    return percent.clamp(0.0, 1.0);
+  }
 
   Future<void> setLimit(double newLimit) async {
     if (newLimit <= 0) return;
@@ -93,10 +99,10 @@ class MonthlyLimitProvider with ChangeNotifier {
   void _initializeDailyUsage() {
     final now = DateTime.now();
     final currentDay = now.day.clamp(1, 30);
-    
+
     // Initialize with zeros for all previous days
     _dailyUsage = List.filled(currentDay, 0.0);
-    
+
     // If we have a current energy reading, set it for today
     if (_currentEnergy > 0) {
       _dailyUsage[currentDay - 1] = _currentEnergy;
@@ -110,23 +116,26 @@ class MonthlyLimitProvider with ChangeNotifier {
     final currentDay = _dailyUsage.length;
     final remainingDays = 30 - currentDay;
     if (remainingDays <= 0) return [];
-    
+
     // Don't show projection if we don't have enough data
     if (currentDay < 2) return [];
 
     // Calculate trend based on last 3-7 days (whichever is available)
     final daysToConsider = math.min(7, currentDay - 1);
     double totalIncrease = 0;
-    
+
     // Calculate average daily increase
     for (int i = currentDay - daysToConsider; i < currentDay; i++) {
       totalIncrease += _dailyUsage[i] - (i > 0 ? _dailyUsage[i - 1] : 0);
     }
     double avgDailyIncrease = totalIncrease / daysToConsider;
-    
+
     // Limit the maximum daily increase to prevent extreme projections
     final maxDailyIncrease = _limit * 0.05; // Max 5% of limit per day
-    avgDailyIncrease = avgDailyIncrease.clamp(-maxDailyIncrease, maxDailyIncrease);
+    avgDailyIncrease = avgDailyIncrease.clamp(
+      -maxDailyIncrease,
+      maxDailyIncrease,
+    );
 
     // Calculate projection
     final projected = <double>[];
@@ -136,22 +145,24 @@ class MonthlyLimitProvider with ChangeNotifier {
     for (int i = 0; i < remainingDays; i++) {
       // Gradually reduce the impact of the trend as we project further
       final distanceFactor = (i + 1) / remainingDays;
-      
+
       // Add some random variation (±10%)
       final variation = 0.9 + (math.Random().nextDouble() * 0.2);
-      
+
       // Calculate next value with trend and variation, but limit the increase
-      double nextValue = lastValue + (avgDailyIncrease * variation * (1 - (distanceFactor * 0.5)));
-      
+      double nextValue =
+          lastValue +
+          (avgDailyIncrease * variation * (1 - (distanceFactor * 0.5)));
+
       // Ensure the projection stays within reasonable bounds
       nextValue = nextValue.clamp(0, maxProjectedValue);
-      
+
       // If we're at the limit, don't project any higher
       if (nextValue >= _limit * 0.95) {
         projected.add(_limit);
         break;
       }
-      
+
       projected.add(nextValue);
       lastValue = nextValue;
     }

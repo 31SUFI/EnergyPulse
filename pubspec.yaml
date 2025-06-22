@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   timeago: ^3.7.0
   collection: ^1.18.0
+  flutter_local_notifications: ^19.2.1
+  permission_handler: ^12.0.0+1
 
 dev_dependencies:
   flutter_test:
