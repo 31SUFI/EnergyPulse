@@ -12,7 +12,8 @@ import 'features/home_screen/providers/monthly_limit_provider.dart';
 import 'features/stats_screen/providers/room_selection_provider.dart';
 import 'features/stats_screen/providers/energy_stats_provider.dart';
 import 'core/services/energy_monitor_service.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'core/services/energy_service.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> requestNotificationPermissions() async {
@@ -45,7 +46,12 @@ void main() async {
           ChangeNotifierProvider(create: (_) => NotificationState()),
           ChangeNotifierProvider(create: (_) => SpaceProvider()),
           ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
-          ChangeNotifierProvider(create: (_) => MonthlyLimitProvider()),
+          ChangeNotifierProvider(create: (_) => EnergyService()),
+          ChangeNotifierProxyProvider<EnergyService, MonthlyLimitProvider>(
+            create: (_) => MonthlyLimitProvider(),
+            update: (_, energyService, monthlyLimitProvider) =>
+                monthlyLimitProvider!..updateUsage(energyService),
+          ),
           ChangeNotifierProvider(create: (_) => EnergyStatsProvider()),
         ],
         child: const MyApp(),

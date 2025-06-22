@@ -1,19 +1,67 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'bill_calculator_service.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
-class EnergyService {
-  final DatabaseReference _readingsRef = FirebaseDatabase.instance.ref('readings');
+class EnergyService with ChangeNotifier {
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref('readings');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Stream<Map<String, dynamic>> getEnergyReadings() {
-    return _readingsRef.onValue.map((event) {
-      final data = event.snapshot.value;
-      if (data is Map) {
-        return Map<String, dynamic>.from(data as Map);
-      }
-      return {};
-    });
+  double _totalEnergy = 0.0;
+  bool _isProtected = true; // Default value
+  String _userName = "User";
+
+  double get totalEnergy => _totalEnergy;
+  bool get isProtected => _isProtected;
+  String get userName => _userName;
+
+  /// Calculates the estimated bill based on the current energy consumption.
+  double get estimatedBill {
+    return BillCalculatorService.calculateBill(_totalEnergy, _isProtected);
+  }
+
+  EnergyService() {
+    _listenToEnergyData();
+    _listenToUserData();
+  }
+
+  void _listenToUserData() {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userRef = FirebaseDatabase.instance.ref('users/${user.uid}');
+      userRef.onValue.listen(
+        (event) {
+          if (event.snapshot.exists && event.snapshot.value != null) {
+            final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+            _userName = data['name'] as String? ?? "User";
+            notifyListeners();
+          }
+        },
+        onError: (error) {
+          debugPrint("Error listening to user data: $error");
+        },
+      );
+    }
+  }
+
+  void _listenToEnergyData() {
+    _dbRef.onValue.listen(
+      (event) {
+        if (event.snapshot.exists && event.snapshot.value != null) {
+          final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+          _totalEnergy = (data['energy'] as num?)?.toDouble() ?? 0.0;
+          _isProtected = data['protected'] as bool? ?? true;
+          notifyListeners();
+        }
+      },
+      onError: (error) {
+        debugPrint("Error listening to energy data: $error");
+      },
+    );
   }
 
   Future<void> updateEnergyReading(Map<String, dynamic> reading) async {
-    await _readingsRef.update(reading);
+    await _dbRef.update(reading);
   }
 }

@@ -4,7 +4,6 @@ import '../../../core/services/energy_service.dart';
 import '../../../core/services/monthly_limit_service.dart';
 
 class MonthlyLimitProvider with ChangeNotifier {
-  final EnergyService _energyService = EnergyService();
   double _limit = 0; // Default limit of 500 units
   List<double> _dailyUsage = [];
   double _currentEnergy = 0;
@@ -28,26 +27,22 @@ class MonthlyLimitProvider with ChangeNotifier {
       notifyListeners();
     });
     _initializeDailyUsage();
-    _setupEnergyListener();
     _isLoading = false;
     notifyListeners();
   }
 
-  void _setupEnergyListener() {
-    _energyService.getEnergyReadings().listen((reading) {
-      final newEnergy =
-          double.tryParse(reading['energy']?.toString() ?? '0') ?? 0;
-      debugPrint('Energy reading received: $newEnergy');
+  void updateUsage(EnergyService energyService) {
+    final newEnergy = energyService.totalEnergy;
+    debugPrint('Energy reading received via provider: $newEnergy');
 
-      if (newEnergy != _currentEnergy) {
-        _currentEnergy = newEnergy;
+    if (newEnergy != _currentEnergy) {
+      _currentEnergy = newEnergy;
 
-        // Update the current day's usage with the new energy value
-        _updateDailyUsageWithNewReading(newEnergy);
+      // Update the current day's usage with the new energy value
+      _updateDailyUsageWithNewReading(newEnergy);
 
-        notifyListeners();
-      }
-    });
+      notifyListeners();
+    }
   }
 
   void _updateDailyUsageWithNewReading(double newEnergy) {

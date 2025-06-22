@@ -19,4 +19,5 @@ class AppColors {
   // Background Colors
   static const Color background = Color(0xFFFFFFFF); // White
   static const Color cardBackground = Color(0xFFF5F5F5); // Light Gray
+  static const Color border = Color(0xFFE0E0E0); // Light grey for borders
 }

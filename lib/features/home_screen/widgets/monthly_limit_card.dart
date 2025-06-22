@@ -1,3 +1,4 @@
+import 'package:energy_meter_app/core/services/energy_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
@@ -93,9 +94,10 @@ class MonthlyLimitCard extends StatelessWidget {
               builder: (context, monthlyLimitProvider, _) {
                 // Find min and max values for scaling
                 final limit = monthlyLimitProvider.limit;
-final maxY = (limit > 0 && limit.isFinite) ? limit * 1.1 : 100.0;
-final minY = 0.0;
-final maxX = 30.0; // Days in month
+                final maxY =
+                    (limit > 0 && limit.isFinite) ? limit * 1.1 : 100.0;
+                final minY = 0.0;
+                final maxX = 30.0; // Days in month
 
                 return SizedBox(
                   height: 200,
@@ -108,8 +110,11 @@ final maxX = 30.0; // Days in month
                       gridData: FlGridData(
                         show: true,
                         drawVerticalLine: true,
-                        horizontalInterval: (maxY / 5).isFinite && (maxY / 5) > 0 ? maxY / 5 : 20.0, // Show 5 horizontal lines
-verticalInterval: 5, // Show vertical line every 5 days
+                        horizontalInterval:
+                            (maxY / 5).isFinite && (maxY / 5) > 0
+                                ? maxY / 5
+                                : 20.0, // Show 5 horizontal lines
+                        verticalInterval: 5, // Show vertical line every 5 days
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
                             color: Colors.grey[300]!,
@@ -158,12 +163,17 @@ verticalInterval: 5, // Show vertical line every 5 days
                           sideTitles: SideTitles(
                             showTitles: true,
                             reservedSize: 40,
-                            interval: (maxY / 4).isFinite && (maxY / 4) > 0 ? maxY / 4 : 25.0, // Show 4 labels on Y axis
+                            interval:
+                                (maxY / 4).isFinite && (maxY / 4) > 0
+                                    ? maxY / 4
+                                    : 25.0, // Show 4 labels on Y axis
                             getTitlesWidget: (value, meta) {
                               return SideTitleWidget(
                                 axisSide: meta.axisSide,
                                 child: Text(
-                                  value.isFinite ? value.toInt().toString() : '0',
+                                  value.isFinite
+                                      ? value.toInt().toString()
+                                      : '0',
                                   style: const TextStyle(
                                     color: AppColors.textSecondary,
                                     fontSize: 10,
@@ -317,9 +327,11 @@ verticalInterval: 5, // Show vertical line every 5 days
   }
 
   Future<void> _showEditLimitDialog(BuildContext context) async {
-    final provider = Provider.of<MonthlyLimitProvider>(context, listen: false);
+    final monthlyLimitProvider = Provider.of<MonthlyLimitProvider>(context);
+    final energyService = Provider.of<EnergyService>(context, listen: false);
+    monthlyLimitProvider.updateUsage(energyService);
     final controller = TextEditingController(
-      text: provider.limit.toStringAsFixed(2),
+      text: monthlyLimitProvider.limit.toStringAsFixed(2),
     );
 
     return showDialog<void>(
@@ -365,7 +377,7 @@ verticalInterval: 5, // Show vertical line every 5 days
                 onPressed: () async {
                   final newLimit = double.tryParse(controller.text) ?? 0;
                   if (newLimit > 0) {
-                    await provider.setLimit(newLimit);
+                    await monthlyLimitProvider.setLimit(newLimit);
                     if (context.mounted) {
                       Navigator.pop(context);
                     }
