@@ -1,33 +1,13 @@
 import 'package:flutter/material.dart';
+import 'notification_storage.dart';
 
 class NotificationState extends ChangeNotifier {
+  NotificationState() {
+    _loadNotifications();
+  }
+
   bool _isVisible = false;
-  final List<NotificationItem> _notifications = [
-    NotificationItem(
-      title: 'High Energy Usage Alert',
-      message: 'Living Room consumption is 25% above average',
-      time: DateTime.now().subtract(const Duration(minutes: 5)),
-      type: NotificationType.warning,
-    ),
-    NotificationItem(
-      title: 'Smart Schedule Active',
-      message: 'AC will automatically turn off at 10 PM',
-      time: DateTime.now().subtract(const Duration(hours: 2)),
-      type: NotificationType.info,
-    ),
-    NotificationItem(
-      title: 'Energy Goal Achieved',
-      message: "You've met your daily energy saving target!",
-      time: DateTime.now().subtract(const Duration(hours: 6)),
-      type: NotificationType.success,
-    ),
-    NotificationItem(
-      title: 'Device Offline',
-      message: 'Kitchen smart plug is disconnected',
-      time: DateTime.now().subtract(const Duration(days: 1)),
-      type: NotificationType.error,
-    ),
-  ];
+  final List<NotificationItem> _notifications = [];
 
   bool get isVisible => _isVisible;
   List<NotificationItem> get notifications => _notifications;
@@ -39,16 +19,26 @@ class NotificationState extends ChangeNotifier {
 
   void addNotification(NotificationItem notification) {
     _notifications.insert(0, notification);
+    NotificationStorage.saveNotifications(_notifications);
     notifyListeners();
   }
 
   void removeNotification(int index) {
     _notifications.removeAt(index);
+    NotificationStorage.saveNotifications(_notifications);
     notifyListeners();
   }
 
   void clearAll() {
     _notifications.clear();
+    NotificationStorage.clearNotifications();
+    notifyListeners();
+  }
+
+  Future<void> _loadNotifications() async {
+    final loaded = await NotificationStorage.loadNotifications();
+    _notifications.clear();
+    _notifications.addAll(loaded);
     notifyListeners();
   }
 }
@@ -65,6 +55,23 @@ class NotificationItem {
     required this.time,
     this.type = NotificationType.info,
   });
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'message': message,
+    'time': time.toIso8601String(),
+    'type': type.name,
+  };
+
+  factory NotificationItem.fromJson(Map<String, dynamic> json) => NotificationItem(
+    title: json['title'] as String,
+    message: json['message'] as String,
+    time: DateTime.parse(json['time'] as String),
+    type: NotificationType.values.firstWhere(
+      (e) => e.name == json['type'],
+      orElse: () => NotificationType.info,
+    ),
+  );
 }
 
 enum NotificationType { info, warning, success, error }
