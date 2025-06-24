@@ -11,10 +11,16 @@ class EnergyService with ChangeNotifier {
   double _totalEnergy = 0.0;
   bool _isProtected = true; // Default value
   String _userName = "User";
+  String _userEmail = "UserEmail";
+  String _householdId = "HouseholdId";
+  String _propertyType = "PropertyType";
 
   double get totalEnergy => _totalEnergy;
   bool get isProtected => _isProtected;
   String get userName => _userName;
+  String get userEmail => _userEmail;
+  String get householdId => _householdId;
+  String get propertyType => _propertyType;
 
   /// Calculates the estimated bill based on the current energy consumption.
   double get estimatedBill {
@@ -35,6 +41,9 @@ class EnergyService with ChangeNotifier {
           if (event.snapshot.exists && event.snapshot.value != null) {
             final data = Map<String, dynamic>.from(event.snapshot.value as Map);
             _userName = data['name'] as String? ?? "User";
+            _userEmail = data['email'] as String? ?? "User";
+            _householdId = data['houseId'] as String? ?? "HouseholdId";
+            _propertyType = data['propertyType'] as String? ?? "PropertyType";
             notifyListeners();
           }
         },

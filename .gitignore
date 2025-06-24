@@ -33,6 +33,15 @@ migrate_working_dir/
 .pub/
 /build/
 
+
+# Flutter auto-generated plugin registrant files
+**/generated_plugin_registrant.cc
+**/generated_plugin_registrant.h
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.*
+**/flutter_export_environment.sh
+**/Flutter-Generated.xcconfig
+
 # Symbolication related
 app.*.symbols
 

@@ -1,4 +1,7 @@
+import 'package:energy_meter_app/core/services/energy_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/profile_model.dart';
 import '../widgets/profile_section_card.dart';
 import '../../../core/constants/app_colors.dart';
@@ -35,7 +38,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = ProfileModel.dummyProfile;
+    final energyService = Provider.of<EnergyService>(context);
+    final user = FirebaseAuth.instance.currentUser;
+
+    // Fallbacks if data is missing
+    final String userName = energyService.userName.isNotEmpty ? energyService.userName : (user?.displayName ?? 'User');
+    final String email = user?.email ?? 'No email';
+    final String householdId = energyService.householdId;
+    final String propertyType = energyService.propertyType;
+
+    // No image in DB, so use a visually distinct icon
+    // You can randomize or pick one, here we use face_6_rounded
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -55,12 +68,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(profile.profilePicture),
                       backgroundColor: AppColors.primary.withAlpha(26),
+                      child: Icon(
+                        Icons.face_6_rounded,
+                        size: 60,
+                        color: AppColors.primary,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      profile.name,
+                      userName,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -69,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      profile.email,
+                      email,
                       style: const TextStyle(
                         fontSize: 16,
                         color: AppColors.textSecondary,
@@ -81,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Chip(
                           label: Text(
-                            'ID: ${profile.householdId}',
+                            'ID: $householdId',
                             style: const TextStyle(color: AppColors.textWhite),
                           ),
                           backgroundColor: AppColors.primary,
@@ -89,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(width: 8),
                         Chip(
                           label: Text(
-                            profile.accountType,
+                            propertyType,
                             style: const TextStyle(color: AppColors.textWhite),
                           ),
                           backgroundColor: AppColors.secondary,
