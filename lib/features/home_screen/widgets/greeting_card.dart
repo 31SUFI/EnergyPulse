@@ -4,8 +4,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/services/energy_service.dart';
 import '../../../core/theme/app_text_styles.dart';
 
-class WeatherGreeting extends StatelessWidget {
-  const WeatherGreeting({super.key});
+class GreetingCard extends StatelessWidget {
+  const GreetingCard({super.key});
 
   @override
   Widget build(BuildContext context) {

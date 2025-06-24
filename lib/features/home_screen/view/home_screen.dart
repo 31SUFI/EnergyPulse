@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/weather_greeting.dart';
+import '../widgets/greeting_card.dart';
 import '../widgets/today_usage_card.dart';
 import '../widgets/my_spaces.dart';
 import '../widgets/monthly_limit_card.dart';
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
           (context, appState, _) => SingleChildScrollView(
             child: Column(
               children: const [
-                WeatherGreeting(),
+                GreetingCard(),
                 SizedBox(height: 16),
                 MonthlyLimitCard(),
                 SizedBox(height: 16),

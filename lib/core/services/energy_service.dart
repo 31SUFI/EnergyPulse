@@ -41,7 +41,7 @@ class EnergyService with ChangeNotifier {
           if (event.snapshot.exists && event.snapshot.value != null) {
             final data = Map<String, dynamic>.from(event.snapshot.value as Map);
             _userName = data['name'] as String? ?? "User";
-            _userEmail = data['email'] as String? ?? "User";
+            _userEmail = data['email'] as String? ?? "UserEmail                                                               ";
             _householdId = data['houseId'] as String? ?? "HouseholdId";
             _propertyType = data['propertyType'] as String? ?? "PropertyType";
             notifyListeners();
