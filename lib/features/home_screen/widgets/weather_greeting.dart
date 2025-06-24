@@ -46,7 +46,7 @@ class WeatherGreeting extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
-                          'Your connection is ',
+                          'Your connection status is ',
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.textSecondary,
                           ),
