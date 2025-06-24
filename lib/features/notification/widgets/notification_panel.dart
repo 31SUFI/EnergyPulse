@@ -9,6 +9,13 @@ class NotificationPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Mark all as read when panel is built and visible
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final notificationState = Provider.of<NotificationState>(context, listen: false);
+      if (notificationState.isVisible) {
+        notificationState.markAllAsRead();
+      }
+    });
     return Container(
       width: MediaQuery.of(context).size.width * 0.92,
       constraints: const BoxConstraints(maxHeight: 400),

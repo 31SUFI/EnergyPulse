@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/navigation_state.dart';
 import '../../../core/providers/notification_state.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../global widgets/custom_app_bar.dart';
 import '../../../global widgets/custom_bottom_nav_bar.dart';
 import '../../home_screen/view/home_screen.dart';
@@ -27,9 +28,32 @@ class _MainScreenState extends State<MainScreen> {
           appBar: CustomAppBar(
             title: _getTitle(navigationState.currentIndex),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined),
-                onPressed: () => notificationState.togglePanel(),
+              Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () {
+                      notificationState.togglePanel();
+                      if (!notificationState.isVisible) {
+                        // Panel will open, mark all as read
+                        notificationState.markAllAsRead();
+                      }
+                    },
+                  ),
+                  if (notificationState.hasUnread)
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: AppColors.success,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
