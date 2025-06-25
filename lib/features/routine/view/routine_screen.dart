@@ -5,6 +5,7 @@ import '../../../features/home_screen/model/space_model.dart';
 import '../../../features/home_screen/providers/space_provider.dart';
 import '../provider/routine_provider.dart';
 import '../widgets/device_routine_card.dart';
+import 'routine_screen_content_extension.dart';
 
 class RoutineScreen extends StatelessWidget {
   const RoutineScreen({super.key});
@@ -28,7 +29,6 @@ class RoutineScreenContent extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -228,6 +228,9 @@ class RoutineScreenContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+
+              // Relay Scheduling Section
+              const RelayScheduleSection(),
 
               // Action Buttons
               Row(
