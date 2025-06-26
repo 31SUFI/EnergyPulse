@@ -1,3 +1,4 @@
+import 'package:energy_meter_app/core/constants/app_colors.dart';
 import 'package:energy_meter_app/features/routine/model/firebase_schedule_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,29 +24,89 @@ class _RelayScheduleSectionContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<FirebaseScheduleProvider>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
-        const Text('Relay Schedules', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        ...provider.schedules.map((schedule) =>
-          FirebaseScheduleCard(schedule: schedule, provider: provider)
+        const Text(
+          'Scheduled Relays',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerRight,
-          child: FloatingActionButton.small(
-            onPressed: () async {
-              await showDialog(
-                context: context,
-                builder: (context) => _AddScheduleDialog(provider: provider),
-              );
-            },
-            child: const Icon(Icons.add),
+        const SizedBox(height: 4),
+        const Text(
+          'Set up schedules to automatically control your relays',
+          style: TextStyle(fontSize: 13, color: Colors.black54),
+        ),
+        const SizedBox(height: 16),
+
+        if (provider.schedules.isEmpty)
+          _buildEmptyState(context)
+        else
+          ...provider.schedules
+              .map(
+                (schedule) => FirebaseScheduleCard(
+                  schedule: schedule,
+                  provider: provider,
+                ),
+              )
+              .toList(),
+
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => _showAddScheduleDialog(context, provider),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.secondary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 0,
+            ),
+            child: const Text('Add New Schedule'),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.schedule_outlined, size: 36, color: Colors.grey[400]),
+          const SizedBox(height: 12),
+          const Text(
+            'No Schedules Yet',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Add a schedule to automatically control your relays',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddScheduleDialog(
+    BuildContext context,
+    FirebaseScheduleProvider provider,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => _AddScheduleDialog(provider: provider),
     );
   }
 }
@@ -67,90 +128,234 @@ class _AddScheduleDialogState extends State<_AddScheduleDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Add Schedule'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DropdownButtonFormField<int>(
-              value: relay,
-              items: List.generate(4, (i) => i + 1)
-                  .map((e) => DropdownMenuItem(value: e, child: Text('Relay $e')))
-                  .toList(),
-              onChanged: (val) => setState(() => relay = val ?? 1),
-              decoration: const InputDecoration(labelText: 'Relay'),
-            ),
-            DropdownButtonFormField<String>(
-              value: action,
-              items: ['ON', 'OFF']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-              onChanged: (val) => setState(() => action = val ?? 'ON'),
-              decoration: const InputDecoration(labelText: 'Action'),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    title: const Text('Start Time'),
-                    subtitle: Text('${startTime.format(context)}'),
-                    onTap: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: startTime,
-                      );
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 0,
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'New Schedule',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 20),
+
+              // Relay Selection
+              const Text(
+                'Relay',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: relay,
+                    isExpanded: true,
+                    icon: const Icon(Icons.arrow_drop_down, size: 24),
+                    items:
+                        List.generate(4, (i) => i + 1).map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text('Relay $e'),
+                          );
+                        }).toList(),
+                    onChanged: (val) => setState(() => relay = val ?? 1),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Action Selection
+              const Text(
+                'Action',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: action,
+                    isExpanded: true,
+                    icon: const Icon(Icons.arrow_drop_down, size: 24),
+                    items:
+                        ['ON', 'OFF'].map((e) {
+                          return DropdownMenuItem(value: e, child: Text(e));
+                        }).toList(),
+                    onChanged: (val) => setState(() => action = val ?? 'ON'),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Time Selection
+              const Text(
+                'Time Range',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildTimeTile('Start Time', startTime, (picked) {
                       if (picked != null) setState(() => startTime = picked);
-                    },
+                    }),
                   ),
-                ),
-                Expanded(
-                  child: ListTile(
-                    title: const Text('End Time'),
-                    subtitle: Text('${endTime.format(context)}'),
-                    onTap: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: endTime,
-                      );
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildTimeTile('End Time', endTime, (picked) {
                       if (picked != null) setState(() => endTime = picked);
-                    },
+                    }),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Enabled Switch
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SwitchListTile(
+                  title: const Text(
+                    'Enable Schedule',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  value: enabled,
+                  onChanged: (val) => setState(() => enabled = val),
+                  activeColor: AppColors.secondary,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-              ],
+              ),
+              const SizedBox(height: 20),
+
+              // Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        side: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _saveSchedule,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text('Save'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeTile(
+    String title,
+    TimeOfDay time,
+    ValueChanged<TimeOfDay?> onTimePicked,
+  ) {
+    return InkWell(
+      onTap: () async {
+        final picked = await showTimePicker(
+          context: context,
+          initialTime: time,
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: AppColors.secondary,
+                  onPrimary: Colors.white,
+                  onSurface: Colors.black87,
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+        onTimePicked(picked);
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        constraints: const BoxConstraints(minWidth: 120),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 13, color: Colors.black54),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            SwitchListTile(
-              value: enabled,
-              onChanged: (val) => setState(() => enabled = val),
-              title: const Text('Enabled'),
+            const SizedBox(width: 8),
+            Text(
+              '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}',
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
             ),
           ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            widget.provider.createSchedule(
-              FirebaseSchedule(
-                id: '',
-                relay: relay,
-                action: action,
-                startTime: _formatTime(startTime),
-                endTime: _formatTime(endTime),
-                enabled: enabled,
-              ),
-            );
-            Navigator.of(context).pop();
-          },
-          child: const Text('Add'),
-        ),
-      ],
     );
   }
 
-  String _formatTime(TimeOfDay t) => '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+  void _saveSchedule() {
+    widget.provider.createSchedule(
+      FirebaseSchedule(
+        id: '',
+        relay: relay,
+        action: action,
+        startTime: _formatTime(startTime),
+        endTime: _formatTime(endTime),
+        enabled: enabled,
+      ),
+    );
+    Navigator.of(context).pop();
+  }
+
+  String _formatTime(TimeOfDay t) =>
+      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
 }
