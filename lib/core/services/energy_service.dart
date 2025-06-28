@@ -49,6 +49,8 @@ class EnergyService with ChangeNotifier {
             _userEmail = data['email'] as String? ?? "UserEmail                                                               ";
             _householdId = data['houseId'] as String? ?? "HouseholdId";
             _propertyType = data['propertyType'] as String? ?? "PropertyType";
+            _isProtected = data['protected'] as bool? ?? true;
+
             notifyListeners();
           }
         },
@@ -65,7 +67,6 @@ class EnergyService with ChangeNotifier {
         if (event.snapshot.exists && event.snapshot.value != null) {
           final data = Map<String, dynamic>.from(event.snapshot.value as Map);
           _totalEnergy = (data['energy'] as num?)?.toDouble() ?? 0.0;
-          _isProtected = data['protected'] as bool? ?? true;
           notifyListeners();
         }
       },
