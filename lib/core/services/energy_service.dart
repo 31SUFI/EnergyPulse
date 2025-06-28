@@ -24,7 +24,12 @@ class EnergyService with ChangeNotifier {
 
   /// Calculates the estimated bill based on the current energy consumption.
   double get estimatedBill {
-    return BillCalculatorService.calculateBill(_totalEnergy, _isProtected);
+    final billDetails = BillCalculator.calculateBill(
+      isUnprotected: !_isProtected, 
+      period: 'current', // Defaulting to 'current' period
+      units: _totalEnergy.toInt(),
+    );
+    return billDetails['totalBill'];
   }
 
   EnergyService() {

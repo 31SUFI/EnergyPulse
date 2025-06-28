@@ -34,7 +34,12 @@ class RoomUsageStats extends StatelessWidget {
 
               final stats = energyProvider.getRoomStats(selectedSpace);
               final isProtected = energyService.isProtected;
-              final estimatedCost = BillCalculatorService.calculateBill(stats.totalUsage, isProtected);
+              final billDetails = BillCalculator.calculateBill(
+                isUnprotected: !isProtected,
+                period: 'current', // Defaulting to 'current' period
+                units: stats.totalUsage.toInt(),
+              );
+              final estimatedCost = billDetails['totalBill'];
 
               if (stats.devices.isEmpty) {
                 return const Center(child: Text('No energy data available'));
