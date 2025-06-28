@@ -327,7 +327,7 @@ class MonthlyLimitCard extends StatelessWidget {
   }
 
   Future<void> _showEditLimitDialog(BuildContext context) async {
-    final monthlyLimitProvider = Provider.of<MonthlyLimitProvider>(context);
+    final monthlyLimitProvider = Provider.of<MonthlyLimitProvider>(context, listen: false);
     final energyService = Provider.of<EnergyService>(context, listen: false);
     monthlyLimitProvider.updateUsage(energyService);
     final controller = TextEditingController(
