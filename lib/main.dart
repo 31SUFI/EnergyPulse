@@ -13,6 +13,7 @@ import 'features/stats_screen/providers/room_selection_provider.dart';
 import 'features/stats_screen/providers/energy_stats_provider.dart';
 import 'core/services/energy_monitor_service.dart';
 import 'core/services/energy_service.dart';
+import 'features/routine/provider/firebase_realtime_provider.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -53,6 +54,7 @@ void main() async {
                 monthlyLimitProvider!..updateUsage(energyService),
           ),
           ChangeNotifierProvider(create: (_) => EnergyStatsProvider()),
+          ChangeNotifierProvider(create: (_) => FirebaseRealtimeProvider()),
         ],
         child: const MyApp(),
       ),

@@ -6,6 +6,7 @@ import '../../../features/home_screen/providers/space_provider.dart';
 import '../provider/routine_provider.dart';
 import '../widgets/device_routine_card.dart';
 import 'routine_screen_content_extension.dart';
+import '../widgets/realtime_control_card.dart';
 
 class RoutineScreen extends StatelessWidget {
   const RoutineScreen({super.key});
@@ -231,6 +232,13 @@ class RoutineScreenContent extends StatelessWidget {
 
               // Relay Scheduling Section
               const RelayScheduleSection(),
+
+              const SizedBox(height: 16),
+
+              // Real-time Control Card
+              const RealtimeControlCard(),
+
+              const SizedBox(height: 16),
 
               // Action Buttons
               Row(
