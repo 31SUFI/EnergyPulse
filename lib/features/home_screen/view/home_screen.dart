@@ -1,5 +1,3 @@
-import 'package:energy_meter_app/features/suggestions/provider/suggestion_provider.dart';
-import 'package:energy_meter_app/features/suggestions/widgets/suggestion_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/app_state.dart';
@@ -13,27 +11,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final suggestionProvider = context.watch<SuggestionProvider>();
-    final suggestion = suggestionProvider.suggestion;
-
     return Consumer<AppState>(
       builder: (context, appState, _) => SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: [
-            const GreetingCard(),
-            const SizedBox(height: 16),
-            if (suggestion != null)
-              SuggestionCard(
-                suggestion: suggestion,
-                onApply: () {
-                  suggestionProvider.applySuggestion(context);
-                },
-              ),
-            const MonthlyLimitCard(),
-            const SizedBox(height: 16),
-            const TodayUsageCard(),
-            const SizedBox(height: 16),
-            const MySpaces(),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            GreetingCard(),
+            SizedBox(height: 16),
+            MonthlyLimitCard(),
+            SizedBox(height: 24),
+            TodayUsageCard(),
+            SizedBox(height: 24),
+            MySpaces(),
           ],
         ),
       ),
