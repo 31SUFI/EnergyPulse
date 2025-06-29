@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:energy_meter_app/features/home_screen/providers/monthly_limit_provider.dart';
 import 'package:energy_meter_app/features/routine/model/firebase_schedule_model.dart';
 import 'package:energy_meter_app/features/routine/provider/firebase_schedule_provider.dart';
@@ -14,6 +16,45 @@ class SuggestionProvider extends ChangeNotifier {
 
   final List<Suggestion> _suggestions = [];
   List<Suggestion> get suggestions => _suggestions;
+
+  static final List<Suggestion> _suggestionPool = [
+    Suggestion(
+      title: 'AC Energy Saving Tip',
+      description:
+          'You are close to your monthly limit. Turn off the Smart AC during peak hours (5 PM - 9 PM) to save energy.',
+      deviceId: 'Smart AC',
+      action: 'schedule_off',
+      startTime: '17:00',
+      endTime: '21:00',
+    ),
+    Suggestion(
+      title: 'Refrigerator Power Saving',
+      description:
+          'Run the Smart Refrigerator on a power-saving cycle during late-night hours (1 AM - 4 AM).',
+      deviceId: 'Smart Refrigerator',
+      action: 'schedule_off',
+      startTime: '01:00',
+      endTime: '04:00',
+    ),
+    Suggestion(
+      title: 'Smart Fan Scheduling',
+      description:
+          'Save energy by scheduling the Smart Fan to turn off automatically in the early morning (4 AM - 6 AM).',
+      deviceId: 'Smart Fan',
+      action: 'schedule_off',
+      startTime: '04:00',
+      endTime: '06:00',
+    ),
+    Suggestion(
+      title: 'Evening Light Management',
+      description:
+          'Dim or turn off Smart Lights between 7 PM and 10 PM to reduce consumption.',
+      deviceId: 'Smart Light',
+      action: 'schedule_off',
+      startTime: '19:00',
+      endTime: '22:00',
+    ),
+  ];
 
   SuggestionProvider(this._energyService, this._monthlyLimitProvider) {
     _energyService.addListener(_updateSuggestions);
@@ -35,28 +76,10 @@ class SuggestionProvider extends ChangeNotifier {
         debugPrint(
           '[SuggestionProvider] THRESHOLD EXCEEDED. Creating new suggestions.',
         );
-        _suggestions.add(
-          Suggestion(
-            title: 'AC Energy Saving Tip',
-            description:
-                'Turn off the Smart AC during peak hours (2 PM - 5 PM) to save energy.',
-            deviceId: 'Smart AC',
-            action: 'schedule_off',
-            startTime: '14:00',
-            endTime: '17:00',
-          ),
-        );
-        _suggestions.add(
-          Suggestion(
-            title: 'Refrigerator Energy Saving Tip',
-            description:
-                'Turn off the Smart Refrigerator during peak hours (60 PM - 11 PM).',
-            deviceId: 'Smart Refrigerator',
-            action: 'schedule_off',
-            startTime: '18:00',
-            endTime: '23:00',
-          ),
-        );
+        final random = Random();
+        final shuffledPool = List<Suggestion>.from(_suggestionPool)
+          ..shuffle(random);
+        _suggestions.addAll(shuffledPool.take(2));
         notifyListeners();
       }
     } else {
@@ -96,7 +119,12 @@ class SuggestionProvider extends ChangeNotifier {
   ) async {
     final scheduleProvider = context.read<FirebaseScheduleProvider>();
 
-    final deviceToRelayMap = {'Smart AC': 4, 'Smart Refrigerator': 3};
+    final deviceToRelayMap = {
+      'Smart AC': 4,
+      'Smart Refrigerator': 3,
+      'Smart Fan': 2,
+      'Smart Light': 1,
+    };
 
     final relay = deviceToRelayMap[suggestion.deviceId];
 

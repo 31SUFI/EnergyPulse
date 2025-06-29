@@ -1,3 +1,4 @@
+import 'package:energy_meter_app/features/home_screen/widgets/power_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/app_state.dart';
@@ -12,21 +13,22 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppState>(
-      builder: (context, appState, _) => SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            GreetingCard(),
-            SizedBox(height: 16),
-            MonthlyLimitCard(),
-            SizedBox(height: 24),
-            TodayUsageCard(),
-            SizedBox(height: 24),
-            MySpaces(),
-          ],
-        ),
-      ),
+      builder:
+          (context, appState, _) => SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                GreetingCard(),
+                SizedBox(height: 16),
+                MonthlyLimitCard(),
+                SizedBox(height: 24),
+                TodayUsageCard(),
+                SizedBox(height: 24),
+                PowerInfoCard(),
+              ],
+            ),
+          ),
     );
   }
 }

@@ -14,8 +14,12 @@ class EnergyService with ChangeNotifier {
   String _userEmail = "UserEmail";
   String _householdId = "HouseholdId";
   String _propertyType = "PropertyType";
+  double _voltage = 0.0;
+  double _current = 0.0;
 
   double get totalEnergy => _totalEnergy;
+  double get voltage => _voltage;
+  double get current => _current;
   bool get isProtected => _isProtected;
   String get userName => _userName;
   String get userEmail => _userEmail;
@@ -67,6 +71,8 @@ class EnergyService with ChangeNotifier {
         if (event.snapshot.exists && event.snapshot.value != null) {
           final data = Map<String, dynamic>.from(event.snapshot.value as Map);
           _totalEnergy = (data['energy'] as num?)?.toDouble() ?? 0.0;
+          _voltage = (data['voltage'] as num?)?.toDouble() ?? 0.0;
+          _current = (data['current'] as num?)?.toDouble() ?? 0.0;
           notifyListeners();
         }
       },

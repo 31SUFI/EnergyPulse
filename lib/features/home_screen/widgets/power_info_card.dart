@@ -4,20 +4,16 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/services/energy_service.dart';
 
-class TodayUsageCard extends StatefulWidget {
-  const TodayUsageCard({super.key});
+class PowerInfoCard extends StatelessWidget {
+  const PowerInfoCard({super.key});
 
-  @override
-  State<TodayUsageCard> createState() => _TodayUsageCardState();
-}
-
-class _TodayUsageCardState extends State<TodayUsageCard> {
   @override
   Widget build(BuildContext context) {
     return Consumer<EnergyService>(
       builder: (context, energyService, child) {
         return Container(
-          margin: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           decoration: BoxDecoration(
             color: AppColors.background,
             borderRadius: BorderRadius.circular(12),
@@ -33,22 +29,23 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Estimated Cost & Units',
+                  'Live Feed',
                   style: TextStyle(
                     fontFamily: 'AnekLatin',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.textPrimary,
                   ),
                 ),
               ),
+              const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   children: [
-                    // Electricity Card
+                    // Voltage Card
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(16),
@@ -60,7 +57,7 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Electricity',
+                              'Voltage',
                               style: TextStyle(
                                 fontFamily: 'AnekLatin',
                                 fontSize: 14,
@@ -72,17 +69,72 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                             Row(
                               children: [
                                 Text(
-                                  energyService.totalEnergy.toStringAsFixed(1),
+                                  energyService.voltage.toStringAsFixed(0),
                                   style: TextStyle(
                                     fontFamily: 'AnekLatin',
-                                    fontSize: 20,
+                                    fontSize: 24,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'kWh',
+                                  'V',
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                const Spacer(),
+                                SvgPicture.asset(
+                                  'assets/images/voltage.svg',
+                                  width: 20,
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Current Card
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardBackground,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Current',
+                              style: TextStyle(
+                                fontFamily: 'AnekLatin',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Text(
+                                  energyService.current.toStringAsFixed(1),
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'A',
                                   style: TextStyle(
                                     fontFamily: 'AnekLatin',
                                     fontSize: 14,
@@ -93,65 +145,8 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                                 const Spacer(),
                                 SvgPicture.asset(
                                   'assets/images/electricity.svg',
-                                  width: 17,
-                                  height: 17,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    // Cost Card
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardBackground,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Cost',
-                              style: TextStyle(
-                                fontFamily: 'AnekLatin',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Text(
-                                  energyService.estimatedBill.toStringAsFixed(
-                                    0,
-                                  ),
-                                  style: TextStyle(
-                                    fontFamily: 'AnekLatin',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textPrimary,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'PKR',
-                                  style: TextStyle(
-                                    fontFamily: 'AnekLatin',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                                const Spacer(),
-                                SvgPicture.asset(
-                                  'assets/images/cash.svg',
-                                  width: 17,
-                                  height: 17,
+                                  width: 20,
+                                  height: 20,
                                 ),
                               ],
                             ),
@@ -160,33 +155,6 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                       ),
                     ),
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: InkWell(
-                  onTap: () {
-                    // TODO: Implement consumption history navigation
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Check Consumption History',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.secondary,
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: AppColors.textPrimary,
-                        size: 20,
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],

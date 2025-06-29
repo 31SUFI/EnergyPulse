@@ -198,7 +198,10 @@ class _MySpacesState extends State<MySpaces> {
                     'assets/images/money.svg',
                     width: 16,
                     height: 16,
-                    colorFilter: const ColorFilter.mode(Colors.amber, BlendMode.srcIn),
+                    colorFilter: const ColorFilter.mode(
+                      Colors.amber,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   const SizedBox(width: 2),
                   Text(
