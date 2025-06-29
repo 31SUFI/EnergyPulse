@@ -1,5 +1,5 @@
-import 'package:energy_meter_app/features/suggestions/model/suggestion_model.dart';
 import 'package:energy_meter_app/features/suggestions/provider/suggestion_provider.dart';
+import 'package:energy_meter_app/features/suggestions/widgets/suggestion_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/navigation_state.dart';
@@ -21,38 +21,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  void _showSuggestionDialog(BuildContext context, Suggestion suggestion) {
-    final suggestionProvider = context.read<SuggestionProvider>();
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(suggestion.title),
-          content: Text(suggestion.description),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondary,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Apply Tip'),
-              onPressed: () {
-                suggestionProvider.applySuggestion(context);
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<NavigationState, NotificationState>(
@@ -71,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
                   return IconButton(
                     icon: const Icon(Icons.lightbulb_outline),
                     onPressed: () {
-                      _showSuggestionDialog(context, suggestion);
+                      context.read<SuggestionProvider>().togglePanel();
                     },
                   );
                 },
@@ -126,6 +94,20 @@ class _MainScreenState extends State<MainScreen> {
                 right: 0,
                 left: 0,
                 child: const NotificationPanel(),
+              ),
+              Consumer<SuggestionProvider>(
+                builder: (context, suggestionProvider, child) {
+                  return AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    top: suggestionProvider.isPanelVisible
+                        ? 0
+                        : -(MediaQuery.of(context).size.height),
+                    right: 0,
+                    left: 0,
+                    child: const SuggestionPanel(),
+                  );
+                },
               ),
             ],
           ),

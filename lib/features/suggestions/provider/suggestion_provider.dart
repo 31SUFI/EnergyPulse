@@ -7,6 +7,8 @@ import '../../../core/services/energy_service.dart';
 import '../model/suggestion_model.dart';
 
 class SuggestionProvider extends ChangeNotifier {
+  bool _isPanelVisible = false;
+  bool get isPanelVisible => _isPanelVisible;
   final EnergyService _energyService;
   final MonthlyLimitProvider _monthlyLimitProvider;
 
@@ -23,18 +25,28 @@ class SuggestionProvider extends ChangeNotifier {
     final currentUsage = _monthlyLimitProvider.currentUsage;
     final monthlyLimit = _monthlyLimitProvider.limit;
 
+    debugPrint('[SuggestionProvider] Checking for suggestions...');
+    debugPrint('[SuggestionProvider] Consumption: $currentUsage, Limit: $monthlyLimit');
+
     if (monthlyLimit > 0 && currentUsage > (monthlyLimit * 0.8)) {
-      _suggestion = Suggestion(
-        title: 'Energy Saving Tip',
-        description:
-            'You can save energy by turning off the Smart AC between 2 PM and 5 PM.',
-        deviceId: 'Smart AC',
-        action: 'schedule_off',
-      );
+      if (_suggestion == null) {
+        debugPrint('[SuggestionProvider] THRESHOLD EXCEEDED. Creating new suggestion.');
+        _suggestion = Suggestion(
+          title: 'Energy Saving Tip',
+          description:
+              'You can save energy by turning off the Smart AC between 2 PM and 5 PM.',
+          deviceId: 'Smart AC',
+          action: 'schedule_off',
+        );
+        notifyListeners();
+      }
     } else {
-      _suggestion = null;
+      if (_suggestion != null) {
+        debugPrint('[SuggestionProvider] Consumption below threshold. Clearing suggestion.');
+        _suggestion = null;
+        notifyListeners();
+      }
     }
-    notifyListeners();
   }
 
   @override
@@ -42,6 +54,17 @@ class SuggestionProvider extends ChangeNotifier {
     _energyService.removeListener(_updateSuggestions);
     _monthlyLimitProvider.removeListener(_updateSuggestions);
     super.dispose();
+  }
+
+  void togglePanel() {
+    _isPanelVisible = !_isPanelVisible;
+    notifyListeners();
+  }
+
+  void dismissSuggestion() {
+    _suggestion = null;
+    // Keep the panel open briefly to show the result, then it will disappear.
+    notifyListeners();
   }
 
   Future<void> applySuggestion(BuildContext context) async {
@@ -81,6 +104,8 @@ class SuggestionProvider extends ChangeNotifier {
           content: Text('Energy-saving tip applied successfully!'),
         ),
       );
+      dismissSuggestion();
+      togglePanel();
     } catch (e) {
       ScaffoldMessenger.of(
         context,
