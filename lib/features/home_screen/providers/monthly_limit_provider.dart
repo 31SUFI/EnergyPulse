@@ -1,17 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
+import 'dart:async';
+import '../../../core/providers/notification_state.dart';
 import '../../../core/services/energy_service.dart';
 import '../../../core/services/monthly_limit_service.dart';
 
 class MonthlyLimitProvider with ChangeNotifier {
+  final NotificationState? _notificationState;
   double _limit = 0; // Default limit of 500 units
   List<double> _dailyUsage = [];
   double _currentEnergy = 0;
   final MonthlyLimitService _limitService = MonthlyLimitService();
   bool _isLoading = true;
   bool get isLoading => _isLoading;
+  bool _limitCrossedNotified = false;
 
-  MonthlyLimitProvider() {
+  MonthlyLimitProvider({NotificationState? notificationState})
+      : _notificationState = notificationState {
     _init();
   }
 
@@ -40,7 +45,25 @@ class MonthlyLimitProvider with ChangeNotifier {
 
       // Update the current day's usage with the new energy value
       _updateDailyUsageWithNewReading(newEnergy);
-
+      if (currentUsage > _limit) {
+        _limitService.updateProtectedStatus(false);
+        if (!_limitCrossedNotified) {
+          Future.microtask(() {
+            _notificationState?.addNotification(
+              NotificationItem(
+                title: 'Energy Limit Crossed',
+                message: 'You have crossed the ${_limit.toInt()} units limit.',
+                time: DateTime.now(),
+                type: NotificationType.warning,
+              ),
+            );
+          });
+          _limitCrossedNotified = true;
+        }
+      } else {
+        _limitService.updateProtectedStatus(true);
+        _limitCrossedNotified = false; // Reset when back under the limit
+      }
       notifyListeners();
     }
   }

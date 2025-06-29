@@ -26,14 +26,18 @@ class EnergyService with ChangeNotifier {
   String get householdId => _householdId;
   String get propertyType => _propertyType;
 
-  /// Calculates the estimated bill based on the current energy consumption.
-  double get estimatedBill {
-    final billDetails = BillCalculator.calculateBill(
+  /// Returns the full details of the calculated bill.
+  Map<String, dynamic> get billDetails {
+    return BillCalculator.calculateBill(
       isUnprotected: !_isProtected, 
       period: 'current', // Defaulting to 'current' period
       units: _totalEnergy.toInt(),
     );
-    return billDetails['totalBill'];
+  }
+
+  /// Calculates the estimated bill amount for convenience.
+  double get estimatedBill {
+    return billDetails['totalBill'] ?? 0.0;
   }
 
   EnergyService() {

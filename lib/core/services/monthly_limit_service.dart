@@ -30,6 +30,14 @@ class MonthlyLimitService {
   }
 
   // Real-time stream for monthly limit
+  Future<void> updateProtectedStatus(bool isProtected) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await _usersRef.child(user.uid).child('protected').set(isProtected);
+    }
+  }
+
+  // Real-time stream for monthly limit
   Stream<double> getMonthlyLimitStream() {
     final ref = _getUserLimitRef();
     if (ref == null) {

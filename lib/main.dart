@@ -51,7 +51,9 @@ void main() async {
           ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
           ChangeNotifierProvider(create: (_) => EnergyService()),
           ChangeNotifierProxyProvider<EnergyService, MonthlyLimitProvider>(
-            create: (_) => MonthlyLimitProvider(),
+            create: (context) => MonthlyLimitProvider(
+              notificationState: context.read<NotificationState>(),
+            ),
             update: (_, energyService, monthlyLimitProvider) =>
                 monthlyLimitProvider!..updateUsage(energyService),
           ),
