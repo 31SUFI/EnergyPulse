@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../core/config/device_config.dart';
 import '../../../features/home_screen/model/space_model.dart';
+import '../../../features/home_screen/providers/space_provider.dart';
 import '../model/routine_model.dart';
 
 class RoutineProvider extends ChangeNotifier {
+  RoutineProvider(SpaceProvider spaceProvider) {
+    if (spaceProvider.spaces.isNotEmpty && _selectedSpace == null) {
+      setSelectedSpace(spaceProvider.spaces.first);
+    }
+  }
   Space? _selectedSpace;
   String _routineName = '';
   String _frequency = 'Everyday';

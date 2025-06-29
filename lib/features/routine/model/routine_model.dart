@@ -22,6 +22,16 @@ class DeviceRoutine {
     this.selectedMode,
   });
 
+  factory DeviceRoutine.empty() {
+    return DeviceRoutine(
+      deviceId: '',
+      deviceName: 'Unknown Device',
+      deviceIcon: '❓',
+      startTime: const TimeOfDay(hour: 0, minute: 0),
+      endTime: const TimeOfDay(hour: 0, minute: 0),
+    );
+  }
+
   DeviceRoutine copyWith({
     String? deviceId,
     String? deviceName,

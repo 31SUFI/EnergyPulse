@@ -5,8 +5,8 @@ import '../../../features/home_screen/model/space_model.dart';
 import '../../../features/home_screen/providers/space_provider.dart';
 import '../provider/routine_provider.dart';
 import '../widgets/device_routine_card.dart';
-import 'routine_screen_content_extension.dart';
 import '../widgets/realtime_control_card.dart';
+import 'routine_screen_content_extension.dart';
 
 class RoutineScreen extends StatelessWidget {
   const RoutineScreen({super.key});
@@ -14,7 +14,7 @@ class RoutineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RoutineProvider(),
+      create: (context) => RoutineProvider(context.read<SpaceProvider>()),
       child: const RoutineScreenContent(),
     );
   }
@@ -207,21 +207,25 @@ class RoutineScreenContent extends StatelessWidget {
 
                       // Devices List
                       if (routineProvider.selectedSpace != null) ...[
-                        const Text(
-                          'Devices in your routine',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black87,
+                        if (routineProvider.selectedSpace!.name == 'Master Bedroom') ...[
+                          const RealtimeControlCard(),
+                        ] else if (routineProvider.selectedSpace!.name != 'Kitchen') ...[
+                          const Text(
+                            'Devices in your routine',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        ...routineProvider.devices.map((device) {
-                          return DeviceRoutineCard(
-                            device: device,
-                            onUpdate: routineProvider.updateDeviceRoutine,
-                          );
-                        }),
+                          const SizedBox(height: 16),
+                          ...routineProvider.devices.map((device) {
+                            return DeviceRoutineCard(
+                              device: device,
+                              onUpdate: routineProvider.updateDeviceRoutine,
+                            );
+                          }),
+                        ],
                       ],
                       const SizedBox(height: 24),
                     ],
@@ -232,11 +236,6 @@ class RoutineScreenContent extends StatelessWidget {
 
               // Relay Scheduling Section
               const RelayScheduleSection(),
-
-              const SizedBox(height: 16),
-
-              // Real-time Control Card
-              const RealtimeControlCard(),
 
               const SizedBox(height: 16),
 
@@ -271,9 +270,9 @@ class RoutineScreenContent extends StatelessWidget {
                       onPressed:
                           routineProvider.canCreateRoutine
                               ? () {
-                                routineProvider.createRoutine();
-                                Navigator.pop(context);
-                              }
+                                  routineProvider.createRoutine();
+                                  Navigator.pop(context);
+                                }
                               : null,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -281,19 +280,12 @@ class RoutineScreenContent extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.play_arrow, size: 20),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'Start Routine',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                      child: const Text(
+                        'Create Routine',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
