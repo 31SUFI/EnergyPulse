@@ -29,12 +29,12 @@ class _RelayScheduleSectionContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Scheduled Relays',
+          'Scheduled Devices',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 4),
         const Text(
-          'Set up schedules to automatically control your relays',
+          'Set up schedules to automatically control your devices',
           style: TextStyle(fontSize: 13, color: Colors.black54),
         ),
         const SizedBox(height: 16),
@@ -91,7 +91,7 @@ class _RelayScheduleSectionContent extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Add a schedule to automatically control your relays',
+            'Add a schedule to automatically control your devices',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 13, color: Colors.grey[600]),
           ),
@@ -112,8 +112,14 @@ class _RelayScheduleSectionContent extends StatelessWidget {
 }
 
 class _AddScheduleDialog extends StatefulWidget {
+  final Map<int, String> relayDeviceNames = {
+    1: 'Smart Light',
+    2: 'Smart Fan',
+    3: 'Smart Heater',
+    4: 'Smart AC',
+  };
   final FirebaseScheduleProvider provider;
-  const _AddScheduleDialog({required this.provider});
+  _AddScheduleDialog({required this.provider});
 
   @override
   State<_AddScheduleDialog> createState() => _AddScheduleDialogState();
@@ -161,13 +167,12 @@ class _AddScheduleDialogState extends State<_AddScheduleDialog> {
                     value: relay,
                     isExpanded: true,
                     icon: const Icon(Icons.arrow_drop_down, size: 24),
-                    items:
-                        List.generate(4, (i) => i + 1).map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text('Relay $e'),
-                          );
-                        }).toList(),
+                    items: widget.relayDeviceNames.keys.map((relay) {
+                      return DropdownMenuItem(
+                        value: relay,
+                        child: Text(widget.relayDeviceNames[relay] ?? 'Relay $relay'),
+                      );
+                    }).toList(),
                     onChanged: (val) => setState(() => relay = val ?? 1),
                   ),
                 ),

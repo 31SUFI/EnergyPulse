@@ -108,44 +108,44 @@ class RoutineScreenContent extends StatelessWidget {
                       const SizedBox(height: 24),
 
                       // Routine Name
-                      const Text(
-                        'Name your routine',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        onChanged: routineProvider.setRoutineName,
-                        decoration: InputDecoration(
-                          hintText: "Oliver's Bed-time routine",
-                          hintStyle: TextStyle(color: Colors.grey[400]),
-                          filled: true,
-                          fillColor: Colors.grey[50],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColors.secondary),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: AppColors.secondary,
-                              width: 2,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
+                      // const Text(
+                      //   'Name your routine',
+                      //   style: TextStyle(
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.w500,
+                      //     color: Colors.black87,
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 8),
+                      // TextFormField(
+                      //   onChanged: routineProvider.setRoutineName,
+                      //   decoration: InputDecoration(
+                      //     hintText: "Oliver's Bed-time routine",
+                      //     hintStyle: TextStyle(color: Colors.grey[400]),
+                      //     filled: true,
+                      //     fillColor: Colors.grey[50],
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide(color: Colors.grey[300]!),
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide(color: AppColors.secondary),
+                      //     ),
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide(
+                      //         color: AppColors.secondary,
+                      //         width: 2,
+                      //       ),
+                      //     ),
+                      //     contentPadding: const EdgeInsets.symmetric(
+                      //       horizontal: 16,
+                      //       vertical: 12,
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 24),
 
                       // Frequency Selection
                       const Text(
@@ -207,9 +207,11 @@ class RoutineScreenContent extends StatelessWidget {
 
                       // Devices List
                       if (routineProvider.selectedSpace != null) ...[
-                        if (routineProvider.selectedSpace!.name == 'Master Bedroom') ...[
+                        if (routineProvider.selectedSpace!.name ==
+                            'Master Bedroom') ...[
                           const RealtimeControlCard(),
-                        ] else if (routineProvider.selectedSpace!.name != 'Kitchen') ...[
+                        ] else if (routineProvider.selectedSpace!.name !=
+                            'Kitchen') ...[
                           const Text(
                             'Devices in your routine',
                             style: TextStyle(
@@ -236,61 +238,6 @@ class RoutineScreenContent extends StatelessWidget {
 
               // Relay Scheduling Section
               const RelayScheduleSection(),
-
-              const SizedBox(height: 16),
-
-              // Action Buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        side: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      child: const Text(
-                        'Edit Routine',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed:
-                          routineProvider.canCreateRoutine
-                              ? () {
-                                  routineProvider.createRoutine();
-                                  Navigator.pop(context);
-                                }
-                              : null,
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        'Create Routine',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
