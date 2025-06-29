@@ -94,8 +94,11 @@ class MonthlyLimitCard extends StatelessWidget {
               builder: (context, monthlyLimitProvider, _) {
                 // Find min and max values for scaling
                 final limit = monthlyLimitProvider.limit;
-                final maxY =
-                    (limit > 0 && limit.isFinite) ? limit * 1.1 : 100.0;
+                final currentUsage = monthlyLimitProvider.currentUsage;
+                var maxY = (limit > currentUsage ? limit : currentUsage) * 1.1;
+                if (maxY == 0) {
+                  maxY = 100.0; // Default value if both limit and usage are 0
+                }
                 final minY = 0.0;
                 final maxX = 30.0; // Days in month
 
