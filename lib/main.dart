@@ -1,4 +1,7 @@
 import 'package:energy_meter_app/features/auth/view/auth_wrapper.dart';
+import 'package:energy_meter_app/features/routine/provider/firebase_realtime_provider.dart';
+import 'package:energy_meter_app/features/routine/provider/firebase_schedule_provider.dart';
+import 'package:energy_meter_app/features/suggestions/provider/suggestion_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,7 +16,6 @@ import 'features/stats_screen/providers/room_selection_provider.dart';
 import 'features/stats_screen/providers/energy_stats_provider.dart';
 import 'core/services/energy_monitor_service.dart';
 import 'core/services/energy_service.dart';
-import 'features/routine/provider/firebase_realtime_provider.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -54,7 +56,14 @@ void main() async {
                 monthlyLimitProvider!..updateUsage(energyService),
           ),
           ChangeNotifierProvider(create: (_) => EnergyStatsProvider()),
+          ChangeNotifierProvider(create: (_) => FirebaseScheduleProvider()),
           ChangeNotifierProvider(create: (_) => FirebaseRealtimeProvider()),
+          ChangeNotifierProvider(
+            create: (context) => SuggestionProvider(
+              context.read<EnergyService>(),
+              context.read<MonthlyLimitProvider>(),
+            ),
+          ),
         ],
         child: const MyApp(),
       ),
