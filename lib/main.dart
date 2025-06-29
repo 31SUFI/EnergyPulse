@@ -51,20 +51,24 @@ void main() async {
           ChangeNotifierProvider(create: (_) => RoomSelectionProvider()),
           ChangeNotifierProvider(create: (_) => EnergyService()),
           ChangeNotifierProxyProvider<EnergyService, MonthlyLimitProvider>(
-            create: (context) => MonthlyLimitProvider(
-              notificationState: context.read<NotificationState>(),
-            ),
-            update: (_, energyService, monthlyLimitProvider) =>
-                monthlyLimitProvider!..updateUsage(energyService),
+            create:
+                (context) => MonthlyLimitProvider(
+                  notificationState: context.read<NotificationState>(),
+                  energyService: context.read<EnergyService>(),
+                ),
+            update:
+                (_, energyService, monthlyLimitProvider) =>
+                    monthlyLimitProvider!..updateUsage(energyService),
           ),
           ChangeNotifierProvider(create: (_) => EnergyStatsProvider()),
           ChangeNotifierProvider(create: (_) => FirebaseScheduleProvider()),
           ChangeNotifierProvider(create: (_) => FirebaseRealtimeProvider()),
           ChangeNotifierProvider(
-            create: (context) => SuggestionProvider(
-              context.read<EnergyService>(),
-              context.read<MonthlyLimitProvider>(),
-            ),
+            create:
+                (context) => SuggestionProvider(
+                  context.read<EnergyService>(),
+                  context.read<MonthlyLimitProvider>(),
+                ),
           ),
         ],
         child: const MyApp(),

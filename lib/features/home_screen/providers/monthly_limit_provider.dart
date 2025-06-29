@@ -14,10 +14,15 @@ class MonthlyLimitProvider with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
   bool _limitCrossedNotified = false;
+  final EnergyService _energyService;
 
-  MonthlyLimitProvider({NotificationState? notificationState})
-      : _notificationState = notificationState {
+  MonthlyLimitProvider({
+    NotificationState? notificationState,
+    required EnergyService energyService,
+  }) : _notificationState = notificationState,
+       _energyService = energyService {
     _init();
+    _loadHistoricalDailyUsage();
   }
 
   Stream<double>? _limitStream;
@@ -186,5 +191,27 @@ class MonthlyLimitProvider with ChangeNotifier {
     }
 
     return projected;
+  }
+
+  /// Loads historical daily kWh data from EnergyService and updates _dailyUsage for the graph.
+  Future<void> _loadHistoricalDailyUsage() async {
+    debugPrint('Calling _loadHistoricalDailyUsage...');
+    final historicalData = await _energyService.fetchHistoricalDailyKwh();
+    if (historicalData.isNotEmpty) {
+      // Sort by date and fill missing days with 0
+      final sortedKeys = historicalData.keys.toList()..sort();
+      final List<double> usage = [];
+      for (final date in sortedKeys) {
+        usage.add(historicalData[date] ?? 0.0);
+      }
+      _dailyUsage = usage;
+      notifyListeners();
+    }
+  }
+
+  /// Public method to manually fetch and log historical data
+  Future<void> fetchAndLogHistoricalData() async {
+    debugPrint('Manually triggering fetchAndLogHistoricalData...');
+    await _loadHistoricalDailyUsage();
   }
 }

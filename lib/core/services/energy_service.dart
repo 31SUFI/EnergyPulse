@@ -29,7 +29,7 @@ class EnergyService with ChangeNotifier {
   /// Returns the full details of the calculated bill.
   Map<String, dynamic> get billDetails {
     return BillCalculator.calculateBill(
-      isUnprotected: !_isProtected, 
+      isUnprotected: !_isProtected,
       period: 'current', // Defaulting to 'current' period
       units: _totalEnergy.toInt(),
     );
@@ -54,7 +54,9 @@ class EnergyService with ChangeNotifier {
           if (event.snapshot.exists && event.snapshot.value != null) {
             final data = Map<String, dynamic>.from(event.snapshot.value as Map);
             _userName = data['name'] as String? ?? "User";
-            _userEmail = data['email'] as String? ?? "UserEmail                                                               ";
+            _userEmail =
+                data['email'] as String? ??
+                "UserEmail                                                               ";
             _householdId = data['houseId'] as String? ?? "HouseholdId";
             _propertyType = data['propertyType'] as String? ?? "PropertyType";
             _isProtected = data['protected'] as bool? ?? true;
@@ -88,5 +90,25 @@ class EnergyService with ChangeNotifier {
 
   Future<void> updateEnergyReading(Map<String, dynamic> reading) async {
     await _dbRef.update(reading);
+  }
+
+  /// Fetch historical daily kWh data from the 'history/days' node in Firebase.
+  /// Returns a map of date (YYYYMMDD) to daily_kwh value.
+  Future<Map<String, double>> fetchHistoricalDailyKwh() async {
+    final historyRef = FirebaseDatabase.instance.ref('history/days');
+    final snapshot = await historyRef.get();
+    if (!snapshot.exists || snapshot.value == null) return {};
+    final data = Map<String, dynamic>.from(snapshot.value as Map);
+    final Map<String, double> dailyKwh = {};
+    data.forEach((date, value) {
+      if (value is Map && value['e'] != null) {
+        final kwh = (value['e'] as num?)?.toDouble();
+        if (kwh != null) {
+          dailyKwh[date] = kwh;
+        }
+      }
+    });
+    debugPrint('Fetched e data: ' + dailyKwh.toString());
+    return dailyKwh;
   }
 }

@@ -21,11 +21,11 @@ class HomeScreen extends StatelessWidget {
               children: const [
                 GreetingCard(),
                 SizedBox(height: 16),
+                PowerInfoCard(),
+                SizedBox(height: 24),
                 MonthlyLimitCard(),
                 SizedBox(height: 24),
                 TodayUsageCard(),
-                SizedBox(height: 24),
-                PowerInfoCard(),
               ],
             ),
           ),
