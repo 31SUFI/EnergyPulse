@@ -233,18 +233,18 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                   padding: const EdgeInsets.all(16.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const StatsScreen(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const StatsScreen(),
+                      //   ),
+                      // );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Check Consumption History',
+                          'View Bill Summary',
                           style: TextStyle(
                             fontFamily: 'AnekLatin',
                             fontSize: 14,
@@ -253,7 +253,7 @@ class _TodayUsageCardState extends State<TodayUsageCard> {
                           ),
                         ),
                         Icon(
-                          Icons.arrow_forward,
+                          Icons.arrow_upward,
                           color: AppColors.textPrimary,
                           size: 20,
                         ),

@@ -16,7 +16,11 @@ class RoomUsageStats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<EnergyService>(
       builder: (context, energyService, _) {
-        return Consumer3<RoomSelectionProvider, SpaceProvider, EnergyStatsProvider>(
+        return Consumer3<
+          RoomSelectionProvider,
+          SpaceProvider,
+          EnergyStatsProvider
+        >(
           builder: (context, roomProvider, spaceProvider, energyProvider, _) {
             if (spaceProvider.spaces.isEmpty) {
               return const Center(child: Text('No spaces available'));
@@ -92,33 +96,7 @@ class RoomUsageStats extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.grey.shade200),
-                          ),
-                          child: Row(
-                            children: const [
-                              Text(
-                                'Weekly Usage',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 18,
-                                color: AppColors.textSecondary,
-                              ),
-                            ],
-                          ),
-                        ),
+                        )
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -129,68 +107,81 @@ class RoomUsageStats extends StatelessWidget {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: stats.devices.map((device) {
-                            final double heightPercentage = maxUsage > 0 ? device.usage / maxUsage : 0;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: SizedBox(
-                                width: 70,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 40,
-                                      child: Text(
-                                        '${device.usage.toStringAsFixed(1)} kWh',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.textSecondary,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Container(
-                                          width: 60,
-                                          height: 180 * heightPercentage,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.bottomCenter,
-                                              end: Alignment.topCenter,
-                                              colors: [
-                                                AppColors.secondary.withAlpha(26),
-                                                AppColors.secondary.withAlpha(77),
-                                              ],
+                          children:
+                              stats.devices.map((device) {
+                                final double heightPercentage =
+                                    maxUsage > 0 ? device.usage / maxUsage : 0;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: SizedBox(
+                                    width: 70,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 40,
+                                          child: Text(
+                                            '${device.usage.toStringAsFixed(1)} kWh',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.textSecondary,
+                                              fontWeight: FontWeight.w500,
                                             ),
-                                            borderRadius: BorderRadius.circular(8),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 40,
-                                      child: Center(
-                                        child: Text(
-                                          _getShortDeviceName(device.deviceName),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: AppColors.textSecondary,
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                              width: 60,
+                                              height: 180 * heightPercentage,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.bottomCenter,
+                                                  end: Alignment.topCenter,
+                                                  colors: [
+                                                    AppColors.secondary
+                                                        .withAlpha(26),
+                                                    AppColors.secondary
+                                                        .withAlpha(77),
+                                                  ],
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        SizedBox(
+                                          height: 40,
+                                          child: Center(
+                                            child: Text(
+                                              _getShortDeviceName(
+                                                device.deviceName,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: AppColors.textSecondary,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                                  ),
+                                );
+                              }).toList(),
                         ),
                       ),
                     ),
 
-                    Divider(height: 1, thickness: 1, color: Colors.grey.shade300),
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Colors.grey.shade300,
+                    ),
                     const SizedBox(height: 16),
 
                     // Summary
@@ -204,15 +195,23 @@ class RoomUsageStats extends StatelessWidget {
                             Expanded(
                               child: Row(
                                 children: [
-                                  const Icon(Icons.bolt, color: Colors.orange, size: 24),
+                                  const Icon(
+                                    Icons.bolt,
+                                    color: Colors.orange,
+                                    size: 24,
+                                  ),
                                   const SizedBox(width: 8),
                                   Flexible(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Electricity Consumed',
-                                          style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.textSecondary,
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -224,7 +223,7 @@ class RoomUsageStats extends StatelessWidget {
                                                 color: AppColors.textPrimary,
                                               ),
                                             ),
-                                            const Icon(Icons.arrow_upward, color: Colors.red, size: 16),
+                                            //const Icon(Icons.arrow_upward, color: Colors.red, size: 16),
                                           ],
                                         ),
                                       ],
@@ -235,7 +234,10 @@ class RoomUsageStats extends StatelessWidget {
                             ),
                             // Divider
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
                               child: VerticalDivider(
                                 width: 1,
                                 thickness: 1,
@@ -264,11 +266,15 @@ class RoomUsageStats extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   Flexible(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Estimated Cost',
-                                          style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.textSecondary,
+                                          ),
                                         ),
                                         Text(
                                           'Rs ${estimatedCost.toStringAsFixed(2)}',

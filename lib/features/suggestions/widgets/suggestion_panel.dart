@@ -30,7 +30,9 @@ class SuggestionPanel extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: AppColors.tertiary,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,7 +87,10 @@ class SuggestionPanel extends StatelessWidget {
                               foregroundColor: Colors.white,
                             ),
                             onPressed: () {
-                              suggestionProvider.applySuggestion(context, suggestion);
+                              suggestionProvider.applySuggestion(
+                                context,
+                                suggestion,
+                              );
                             },
                             child: const Text('Apply Tip'),
                           ),

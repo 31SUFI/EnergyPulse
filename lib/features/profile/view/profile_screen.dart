@@ -21,8 +21,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final List<Map<String, String>> faqs = [
     {
-      'question': 'How to add a new device?',
-      'answer': 'Go to My Spaces and tap on the + button to add a new device.',
+      'question': 'What will happen if you cross 200 limit?',
+      'answer':
+          'Your bill charges will take high jump and you will lie under unprotected customer category, you can see all details in homescreen.',
     },
     {
       'question': 'How to set energy limits?',
@@ -32,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     {
       'question': 'How to create routines?',
       'answer':
-          'Navigate to Smart AI Routine tab and tap Create New Routine to set up automated device controls.',
+          'Navigate to Smart Routine tab and tap add new schedule button to set up automated device controls.',
     },
   ];
 
@@ -42,7 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     // Fallbacks if data is missing
-    final String userName = energyService.userName.isNotEmpty ? energyService.userName : (user?.displayName ?? 'User');
+    final String userName =
+        energyService.userName.isNotEmpty
+            ? energyService.userName
+            : (user?.displayName ?? 'User');
     final String email = user?.email ?? 'No email';
     final String householdId = energyService.householdId;
     final String propertyType = energyService.propertyType;
