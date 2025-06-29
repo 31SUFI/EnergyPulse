@@ -82,7 +82,7 @@ class DeviceRoutineCard extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    if (device.deviceName == 'Smart Heater' && device.isEnabled)
+                    if (device.deviceName == 'Smart Refrigerator' && device.isEnabled)
                       Row(
                         children: [
                           Icon(

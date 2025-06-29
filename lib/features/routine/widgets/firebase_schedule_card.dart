@@ -12,7 +12,7 @@ class FirebaseScheduleCard extends StatelessWidget {
   static final Map<int, ({String name, String icon})> _relayDevices = {
     1: (name: 'Smart Light', icon: '💡'),
     2: (name: 'Smart Fan', icon: '🌀'),
-    3: (name: 'Smart Heater', icon: '🔥'),
+    3: (name: 'Smart Refrigerator', icon: '🧊'),
     4: (name: 'Smart AC', icon: '❄️'),
   };
 

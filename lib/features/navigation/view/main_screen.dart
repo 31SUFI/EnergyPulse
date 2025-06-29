@@ -32,8 +32,8 @@ class _MainScreenState extends State<MainScreen> {
             actions: [
               Consumer<SuggestionProvider>(
                 builder: (context, suggestionProvider, child) {
-                  final suggestion = suggestionProvider.suggestion;
-                  if (suggestion == null) {
+                  final suggestions = suggestionProvider.suggestions;
+                  if (suggestions.isEmpty) {
                     return const SizedBox.shrink(); // No suggestion, no icon
                   }
                   return IconButton(
@@ -100,9 +100,10 @@ class _MainScreenState extends State<MainScreen> {
                   return AnimatedPositioned(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    top: suggestionProvider.isPanelVisible
-                        ? 0
-                        : -(MediaQuery.of(context).size.height),
+                    top:
+                        suggestionProvider.isPanelVisible
+                            ? 0
+                            : -(MediaQuery.of(context).size.height),
                     right: 0,
                     left: 0,
                     child: const SuggestionPanel(),

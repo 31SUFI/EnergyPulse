@@ -115,7 +115,7 @@ class _AddScheduleDialog extends StatefulWidget {
   final Map<int, String> relayDeviceNames = {
     1: 'Smart Light',
     2: 'Smart Fan',
-    3: 'Smart Heater',
+    3: 'Smart Refrigerator',
     4: 'Smart AC',
   };
   final FirebaseScheduleProvider provider;

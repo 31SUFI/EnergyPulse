@@ -5,8 +5,8 @@ class DeviceConfig {
     SpaceCategory.bedroom: [
       DeviceInfo(
         id: 'smart_heater',
-        name: 'Smart Heater',
-        icon: '🔥',
+        name: 'Smart Refrigerator',
+        icon: '🧊',
         supportedModes: ['Economy Mode', 'Comfort Mode', 'Boost Mode'],
       ),
       DeviceInfo(id: 'smart_light', name: 'Smart Light', icon: '💡'),
