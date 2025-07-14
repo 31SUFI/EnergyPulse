@@ -15,6 +15,7 @@ class AppColors {
   static const Color error = Color(0xFFDD4D4D); // #DD4D4D
   static const Color success = Color(0xFF5CBD6B); // #5CBD6B
   static const Color warning = Color(0xFFFFA42D); // #FFA42D
+  static const Color info = Color(0xFF2D9CDB); // A nice blue for info
 
   // Background Colors
   static const Color background = Color(0xFFFFFFFF); // White

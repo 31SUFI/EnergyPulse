@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Electric Residential Tariff with Percentage Increases</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .period-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tariff-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #007bff;
+            display: inline-block;
+        }
+
+        .tariff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .tariff-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .tariff-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.85rem;
+        }
+
+        .tariff-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .tariff-table tr:hover {
+            background-color: #e3f2fd;
+            transition: background-color 0.3s ease;
+        }
+
+        .rate {
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        .fixed-charge {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .units {
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .percentage {
+            font-weight: 600;
+            color: #dc3545;
+            font-size: 0.8rem;
+        }
+
+        .type-badge {
+            background: #ffc107;
+            color: #212529;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .legend {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .legend h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .legend ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .legend li {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tariff-table {
+                font-size: 0.8rem;
+            }
+            
+            .tariff-table th,
+            .tariff-table td {
+                padding: 8px 4px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>K-Electric Residential Tariff</h1>
+            <p>Electricity pricing with percentage increases for residential customers in Karachi</p>
+        </div>
+
+        <div class="period-tabs">
+            <button class="tab active" onclick="showPeriod('current')">Jul - Sep 2024</button>
+            <button class="tab" onclick="showPeriod('future')">Oct 2024 Onwards</button>
+        </div>
+
+        <div class="content">
+            <div class="legend">
+                <h3>📊 Understanding the Percentage Increases</h3>
+                <ul>
+                    <li><strong>Rate Increase %:</strong> Shows the percentage increase in rate compared to the previous slab</li>
+                    <li><strong>Protected Customers:</strong> Lower rates for eligible customers (Lifeline & Protected categories)</li>
+                    <li><strong>Unprotected Customers:</strong> Standard rates for regular residential customers</li>
+                    <li><strong>Fixed Charges:</strong> Additional monthly charges applied to higher consumption slabs</li>
+                </ul>
+            </div>
+
+            <!-- Current Period (Jul-Sep 2024) -->
+            <div id="current-period" class="period-content">
+                <div class="tariff-section">
+                    <h2 class="section-title">Protected Customers</h2>
+                    <table class="tariff-table">
+                        <thead>
+                            <tr>
+                                <th>Units Consumed</th>
+                                <th>Rate (Rs/Unit)</th>
+                                <th>Rate Increase %</th>
+                                <th>Fixed Charges</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="units">0-50 Units</td>
+                                <td class="rate">Rs. 3.95</td>
+                                <td class="percentage">-</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">51-100 Units <span class="type-badge">Lifeline</span></td>
+                                <td class="rate">Rs. 7.74</td>
+                                <td class="percentage">+95.9%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">1-100 Units <span class="type-badge">Protected</span></td>
+                                <td class="rate">Rs. 7.74</td>
+                                <td class="percentage">-</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">101-200 Units <span class="type-badge">Protected</span></td>
+                                <td class="rate">Rs. 10.06</td>
+                                <td class="percentage">+30.0%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tariff-section">
+                    <h2 class="section-title">Unprotected Customers</h2>
+                    <table class="tariff-table">
+                        <thead>
+                            <tr>
+                                <th>Units Consumed</th>
+                                <th>Rate (Rs/Unit)</th>
+                                <th>Rate Increase %</th>
+                                <th>Fixed Charges</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="units">1-100 Units</td>
+                                <td class="rate">Rs. 16.48</td>
+                                <td class="percentage">-</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">101-200 Units</td>
+                                <td class="rate">Rs. 22.95</td>
+                                <td class="percentage">+39.3%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">201-300 Units</td>
+                                <td class="rate">Rs. 34.26</td>
+                                <td class="percentage">+49.3%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">301-400 Units</td>
+                                <td class="rate">Rs. 39.15</td>
+                                <td class="percentage">+14.3%</td>
+                                <td class="fixed-charge">Rs. 200</td>
+                            </tr>
+                            <tr>
+                                <td class="units">401-500 Units</td>
+                                <td class="rate">Rs. 41.36</td>
+                                <td class="percentage">+5.6%</td>
+                                <td class="fixed-charge">Rs. 400</td>
+                            </tr>
+                            <tr>
+                                <td class="units">501-600 Units</td>
+                                <td class="rate">Rs. 42.78</td>
+                                <td class="percentage">+3.4%</td>
+                                <td class="fixed-charge">Rs. 600</td>
+                            </tr>
+                            <tr>
+                                <td class="units">601-700 Units</td>
+                                <td class="rate">Rs. 43.92</td>
+                                <td class="percentage">+2.7%</td>
+                                <td class="fixed-charge">Rs. 800</td>
+                            </tr>
+                            <tr>
+                                <td class="units">Above 700 Units</td>
+                                <td class="rate">Rs. 48.84</td>
+                                <td class="percentage">+11.2%</td>
+                                <td class="fixed-charge">Rs. 1000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Future Period (Oct 2024 onwards) -->
+            <div id="future-period" class="period-content" style="display: none;">
+                <div class="tariff-section">
+                    <h2 class="section-title">Protected Customers</h2>
+                    <table class="tariff-table">
+                        <thead>
+                            <tr>
+                                <th>Units Consumed</th>
+                                <th>Rate (Rs/Unit)</th>
+                                <th>Rate Increase %</th>
+                                <th>Fixed Charges</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="units">0-50 Units</td>
+                                <td class="rate">Rs. 3.95</td>
+                                <td class="percentage">-</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">51-100 Units <span class="type-badge">Lifeline</span></td>
+                                <td class="rate">Rs. 7.74</td>
+                                <td class="percentage">+95.9%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">1-100 Units <span class="type-badge">Protected</span></td>
+                                <td class="rate">Rs. 11.69</td>
+                                <td class="percentage">-</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">101-200 Units <span class="type-badge">Protected</span></td>
+                                <td class="rate">Rs. 14.16</td>
+                                <td class="percentage">+21.1%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tariff-section">
+                    <h2 class="section-title">Unprotected Customers</h2>
+                    <table class="tariff-table">
+                        <thead>
+                            <tr>
+                                <th>Units Consumed</th>
+                                <th>Rate (Rs/Unit)</th>
+                                <th>Rate Increase %</th>
+                                <th>Fixed Charges</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="units">1-100 Units</td>
+                                <td class="rate">Rs. 23.59</td>
+                                <td class="percentage">-</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">101-200 Units</td>
+                                <td class="rate">Rs. 30.07</td>
+                                <td class="percentage">+27.5%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">201-300 Units</td>
+                                <td class="rate">Rs. 34.26</td>
+                                <td class="percentage">+13.9%</td>
+                                <td class="fixed-charge">Rs. 0</td>
+                            </tr>
+                            <tr>
+                                <td class="units">301-400 Units</td>
+                                <td class="rate">Rs. 39.15</td>
+                                <td class="percentage">+14.3%</td>
+                                <td class="fixed-charge">Rs. 200</td>
+                            </tr>
+                            <tr>
+                                <td class="units">401-500 Units</td>
+                                <td class="rate">Rs. 41.36</td>
+                                <td class="percentage">+5.6%</td>
+                                <td class="fixed-charge">Rs. 400</td>
+                            </tr>
+                            <tr>
+                                <td class="units">501-600 Units</td>
+                                <td class="rate">Rs. 42.78</td>
+                                <td class="percentage">+3.4%</td>
+                                <td class="fixed-charge">Rs. 600</td>
+                            </tr>
+                            <tr>
+                                <td class="units">601-700 Units</td>
+                                <td class="rate">Rs. 43.92</td>
+                                <td class="percentage">+2.7%</td>
+                                <td class="fixed-charge">Rs. 800</td>
+                            </tr>
+                            <tr>
+                                <td class="units">Above 700 Units</td>
+                                <td class="rate">Rs. 48.84</td>
+                                <td class="percentage">+11.2%</td>
+                                <td class="fixed-charge">Rs. 1000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 K-Electric Tariff Information | Data extracted from BillCalculator service</p>
+        </div>
+    </div>
+
+    <script>
+        function showPeriod(period) {
+            // Hide all period contents
+            document.querySelectorAll('.period-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected period content
+            document.getElementById(period + '-period').style.display = 'block';
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html> 

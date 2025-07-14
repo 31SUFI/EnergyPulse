@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'bill_calculator_service.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'energy_suggestion_service.dart';
 import 'package:flutter/material.dart';
 
 class EnergyService with ChangeNotifier {
@@ -110,5 +111,36 @@ class EnergyService with ChangeNotifier {
     });
     debugPrint('Fetched e data: ' + dailyKwh.toString());
     return dailyKwh;
+  }
+
+  Future<List<EnergySuggestion>> getEnergySuggestions({
+    required double monthlyLimit,
+  }) async {
+    try {
+      // Use the live total energy reading as the primary source for current usage.
+      final double currentUsage = _totalEnergy;
+
+      debugPrint('[EnergyService] Generating suggestions with Current Usage: $currentUsage kWh and Monthly Limit: $monthlyLimit kWh');
+
+      // Fetch historical data for pattern analysis, but don't use it for the current usage total.
+      final dailyUsageData = await fetchHistoricalDailyKwh();
+      final List<double> allUsageValues = dailyUsageData.values.toList();
+
+      // Instantiate the suggestion service and generate suggestions
+      final suggestionService = EnergySuggestionService();
+      final suggestions = suggestionService.generateSuggestions(
+        currentUsage: currentUsage,
+        monthlyLimit: monthlyLimit,
+        dailyUsage: allUsageValues, // Full history for pattern analysis
+        isProtected: _isProtected,
+      );
+
+      debugPrint('[EnergyService] Generated ${suggestions.length} suggestions.');
+      return suggestions;
+    } catch (e, stackTrace) {
+      debugPrint('Error getting energy suggestions: $e');
+      debugPrint('Stack trace: $stackTrace');
+      return []; // Return empty list on error
+    }
   }
 }

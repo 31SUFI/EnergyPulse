@@ -74,6 +74,7 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ),
           body: Stack(
+            clipBehavior: Clip.hardEdge,
             children: [
               IndexedStack(
                 index: navigationState.currentIndex,
@@ -100,13 +101,13 @@ class _MainScreenState extends State<MainScreen> {
                   return AnimatedPositioned(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    top:
-                        suggestionProvider.isPanelVisible
-                            ? 0
-                            : -(MediaQuery.of(context).size.height),
-                    right: 0,
+                    top: suggestionProvider.isPanelVisible ? 0 : -MediaQuery.of(context).size.height * 0.5,
                     left: 0,
-                    child: const SuggestionPanel(),
+                    right: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 0),
+                      child: SuggestionPanel(),
+                    ),
                   );
                 },
               ),

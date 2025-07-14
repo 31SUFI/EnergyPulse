@@ -1,108 +1,55 @@
-import 'dart:math';
-
 import 'package:energy_meter_app/features/home_screen/providers/monthly_limit_provider.dart';
-import 'package:energy_meter_app/features/routine/model/firebase_schedule_model.dart';
-import 'package:energy_meter_app/features/routine/provider/firebase_schedule_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../core/services/energy_service.dart';
 import '../model/suggestion_model.dart';
 
 class SuggestionProvider extends ChangeNotifier {
+  EnergyService _energyService;
+  MonthlyLimitProvider _monthlyLimitProvider;
+
+  bool _isLoading = false;
   bool _isPanelVisible = false;
-  bool get isPanelVisible => _isPanelVisible;
-  final EnergyService _energyService;
-  final MonthlyLimitProvider _monthlyLimitProvider;
-
-  final List<Suggestion> _suggestions = [];
-  List<Suggestion> get suggestions => _suggestions;
-
-  static final List<Suggestion> _suggestionPool = [
-    Suggestion(
-      title: 'AC Energy Saving Tip',
-      description:
-          'You are close to your monthly limit. Turn off the Smart AC during peak hours (5 PM - 9 PM) to save energy.',
-      deviceId: 'Smart AC',
-      action: 'schedule_off',
-      startTime: '17:00',
-      endTime: '21:00',
-    ),
-    Suggestion(
-      title: 'Refrigerator Power Saving',
-      description:
-          'Run the Smart Refrigerator on a power-saving cycle during late-night hours (1 AM - 4 AM).',
-      deviceId: 'Smart Refrigerator',
-      action: 'schedule_off',
-      startTime: '01:00',
-      endTime: '04:00',
-    ),
-    Suggestion(
-      title: 'Smart Fan Scheduling',
-      description:
-          'Save energy by scheduling the Smart Fan to turn off automatically in the early morning (4 AM - 6 AM).',
-      deviceId: 'Smart Fan',
-      action: 'schedule_off',
-      startTime: '04:00',
-      endTime: '06:00',
-    ),
-    Suggestion(
-      title: 'Evening Light Management',
-      description:
-          'Dim or turn off Smart Lights between 7 PM and 10 PM to reduce consumption.',
-      deviceId: 'Smart Light',
-      action: 'schedule_off',
-      startTime: '19:00',
-      endTime: '22:00',
-    ),
-  ];
+  List<Suggestion> _suggestions = [];
 
   SuggestionProvider(this._energyService, this._monthlyLimitProvider) {
-    _energyService.addListener(_updateSuggestions);
-    _monthlyLimitProvider.addListener(_updateSuggestions);
-    _updateSuggestions();
+
+    fetchSuggestions();
   }
 
-  void _updateSuggestions() {
-    final currentUsage = _monthlyLimitProvider.currentUsage;
-    final monthlyLimit = _monthlyLimitProvider.limit;
+  bool get isLoading => _isLoading;
+  bool get isPanelVisible => _isPanelVisible;
+  List<Suggestion> get suggestions => _suggestions;
 
-    debugPrint('[SuggestionProvider] Checking for suggestions...');
-    debugPrint(
-      '[SuggestionProvider] Consumption: $currentUsage, Limit: $monthlyLimit',
-    );
-
-    if (monthlyLimit > 0 && currentUsage > (monthlyLimit * 0.8)) {
-      if (_suggestions.isEmpty) {
-        debugPrint(
-          '[SuggestionProvider] THRESHOLD EXCEEDED. Creating new suggestions.',
-        );
-        final random = Random();
-        final shuffledPool = List<Suggestion>.from(_suggestionPool)
-          ..shuffle(random);
-        _suggestions.addAll(shuffledPool.take(2));
-        notifyListeners();
-      }
-    } else {
-      if (_suggestions.isNotEmpty) {
-        debugPrint(
-          '[SuggestionProvider] Consumption below threshold. Clearing suggestions.',
-        );
-        _suggestions.clear();
-        notifyListeners();
-      }
-    }
+  // Allows providers to be updated via ProxyProvider
+  void update(EnergyService energyService, MonthlyLimitProvider monthlyLimitProvider) {
+    _energyService = energyService;
+    _monthlyLimitProvider = monthlyLimitProvider;
+    fetchSuggestions(); // Re-fetch suggestions when dependencies change
   }
 
-  @override
-  void dispose() {
-    _energyService.removeListener(_updateSuggestions);
-    _monthlyLimitProvider.removeListener(_updateSuggestions);
-    super.dispose();
-  }
-
-  void togglePanel() {
-    _isPanelVisible = !_isPanelVisible;
+  Future<void> fetchSuggestions() async {
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      final monthlyLimit = _monthlyLimitProvider.limit;
+      final newSuggestions = await _energyService.getEnergySuggestions(
+        monthlyLimit: monthlyLimit,
+      );
+      _suggestions = newSuggestions
+          .map((serviceSuggestion) =>
+              Suggestion.fromEnergySuggestion(serviceSuggestion))
+          .toList();
+    } catch (e) {
+      debugPrint('Error fetching suggestions: $e');
+      _suggestions = [];
+    } finally {
+      _isLoading = false;
+      if (_suggestions.isEmpty) {
+        _isPanelVisible = false;
+      }
+      notifyListeners();
+    }
   }
 
   void dismissSuggestion(Suggestion suggestion) {
@@ -113,49 +60,10 @@ class SuggestionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> applySuggestion(
-    BuildContext context,
-    Suggestion suggestion,
-  ) async {
-    final scheduleProvider = context.read<FirebaseScheduleProvider>();
-
-    final deviceToRelayMap = {
-      'Smart AC': 4,
-      'Smart Refrigerator': 3,
-      'Smart Fan': 2,
-      'Smart Light': 1,
-    };
-
-    final relay = deviceToRelayMap[suggestion.deviceId];
-
-    if (relay == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Device "${suggestion.deviceId}" not found.')),
-      );
-      return;
-    }
-
-    final newSchedule = FirebaseSchedule(
-      id: '', // ID is generated by Firebase, but required by the model.
-      relay: relay,
-      startTime: suggestion.startTime,
-      endTime: suggestion.endTime,
-      action: 'off',
-      enabled: true,
-    );
-
-    try {
-      await scheduleProvider.createSchedule(newSchedule);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Energy-saving tip applied successfully!'),
-        ),
-      );
-      dismissSuggestion(suggestion);
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to apply tip: $e')));
+  void togglePanel() {
+    if (_suggestions.isNotEmpty) {
+      _isPanelVisible = !_isPanelVisible;
+      notifyListeners();
     }
   }
 }

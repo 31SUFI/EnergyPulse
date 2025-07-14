@@ -2,6 +2,7 @@ import 'package:energy_meter_app/core/constants/app_colors.dart';
 import 'package:energy_meter_app/features/suggestions/provider/suggestion_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:energy_meter_app/features/suggestions/widgets/suggestion_card.dart';
 
 class SuggestionPanel extends StatelessWidget {
   const SuggestionPanel({super.key});
@@ -54,54 +55,39 @@ class SuggestionPanel extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(8.0),
-              itemCount: suggestions.length,
-              itemBuilder: (context, index) {
-                final suggestion = suggestions[index];
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          suggestion.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(suggestion.description),
-                        const SizedBox(height: 16),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.secondary,
-                              foregroundColor: Colors.white,
-                            ),
-                            onPressed: () {
-                              suggestionProvider.applySuggestion(
-                                context,
-                                suggestion,
-                              );
-                            },
-                            child: const Text('Apply Tip'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+          if (suggestionProvider.isLoading)
+            const Center(child: CircularProgressIndicator())
+          else if (suggestions.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(
+                child: Text(
+                  'No suggestions at the moment. Great job!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                ),
+              ),
+            )
+          else
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.4, // Max 40% of screen height
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                itemCount: suggestions.length,
+                itemBuilder: (context, index) {
+                  final suggestion = suggestions[index];
+                  return SuggestionCard(
+                    suggestion: suggestion,
+                    onDismiss: () {
+                      suggestionProvider.dismissSuggestion(suggestion);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );

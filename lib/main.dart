@@ -63,12 +63,15 @@ void main() async {
           ChangeNotifierProvider(create: (_) => EnergyStatsProvider()),
           ChangeNotifierProvider(create: (_) => FirebaseScheduleProvider()),
           ChangeNotifierProvider(create: (_) => FirebaseRealtimeProvider()),
-          ChangeNotifierProvider(
-            create:
-                (context) => SuggestionProvider(
-                  context.read<EnergyService>(),
-                  context.read<MonthlyLimitProvider>(),
-                ),
+          ChangeNotifierProxyProvider2<EnergyService, MonthlyLimitProvider,
+              SuggestionProvider>(
+            create: (context) => SuggestionProvider(
+              context.read<EnergyService>(),
+              context.read<MonthlyLimitProvider>(),
+            ),
+            update: (_, energyService, monthlyLimitProvider, suggestionProvider) =>
+                suggestionProvider!
+                  ..update(energyService, monthlyLimitProvider),
           ),
         ],
         child: const MyApp(),
