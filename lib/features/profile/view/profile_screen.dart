@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/profile_model.dart';
 import '../widgets/profile_section_card.dart';
+import 'tariff_screen.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/services/auth_service.dart';
 
@@ -214,18 +215,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
 
-                  // Terms and Privacy
+                  // Tariff Details
                   ListTile(
                     leading: Icon(
-                      Icons.description_outlined,
+                      Icons.receipt_long_outlined,
                       color: AppColors.primary,
                     ),
                     title: Text(
-                      'Terms of Service & Privacy Policy',
+                      'Tariff Details',
                       style: TextStyle(color: AppColors.textPrimary),
                     ),
                     subtitle: Text(
-                      'Read our policies and terms',
+                      'View the latest electricity tariff information',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
                     trailing: Icon(
@@ -233,7 +234,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: AppColors.primary,
                     ),
                     onTap: () {
-                      // TODO: Navigate to Terms
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TariffScreen()),
+                      );
                     },
                   ),
                 ],
