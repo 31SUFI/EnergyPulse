@@ -8,13 +8,7 @@ class FirebaseScheduleCard extends StatelessWidget {
   final FirebaseSchedule schedule;
   final FirebaseScheduleProvider provider;
 
-  // Map relay numbers to device info
-  static final Map<int, ({String name, String icon})> _relayDevices = {
-    1: (name: 'Smart Light', icon: '💡'),
-    2: (name: 'Smart Fan', icon: '🌀'),
-    3: (name: 'Smart Refrigerator', icon: '🧊'),
-    4: (name: 'Smart AC', icon: '❄️'),
-  };
+
 
   const FirebaseScheduleCard({
     Key? key,
@@ -30,9 +24,8 @@ class FirebaseScheduleCard extends StatelessWidget {
       TimeOfDay.now(),
     );
 
-    final device =
-        _relayDevices[schedule.relay] ??
-        (name: 'Relay ${schedule.relay}', icon: '🔌');
+    final device = DeviceConfig.relayDevices[schedule.relay] ??
+        DeviceInfo(id: 'unknown', name: 'Relay ${schedule.relay}', icon: '🔌');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),

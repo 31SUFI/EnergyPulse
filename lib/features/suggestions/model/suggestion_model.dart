@@ -6,6 +6,7 @@ class Suggestion {
   final double estimatedSavings;
   final List<String> actions;
   final String timeRecommendation;
+  final Map<String, dynamic>? schedulePayload;
 
   Suggestion({
     required this.title,
@@ -14,6 +15,7 @@ class Suggestion {
     required this.estimatedSavings,
     required this.actions,
     required this.timeRecommendation,
+    this.schedulePayload,
   });
 
   // Factory constructor to create a Suggestion from an EnergySuggestion
@@ -29,6 +31,7 @@ class Suggestion {
       estimatedSavings: energySuggestion.estimatedSavings,
       actions: List<String>.from(energySuggestion.actions),
       timeRecommendation: energySuggestion.timeRecommendation,
+      schedulePayload: energySuggestion.schedulePayload,
     );
   }
 }

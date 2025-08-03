@@ -1,6 +1,13 @@
 import '../../features/home_screen/model/space_model.dart';
 
 class DeviceConfig {
+  static final Map<int, DeviceInfo> relayDevices = {
+    1: const DeviceInfo(id: 'relay_1', name: 'Smart Light', icon: '💡'),
+    2: const DeviceInfo(id: 'relay_2', name: 'Smart Fan', icon: '🌀'),
+    3: const DeviceInfo(id: 'relay_3', name: 'Smart Refrigerator', icon: '🧊'),
+    4: const DeviceInfo(id: 'relay_4', name: 'Smart AC', icon: '❄️'),
+  };
+
   static const Map<SpaceCategory, List<DeviceInfo>> devicesByCategory = {
     SpaceCategory.bedroom: [
       DeviceInfo(
